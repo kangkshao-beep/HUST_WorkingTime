@@ -18,7 +18,7 @@ struct UshioHomeWidget: Widget {
         }
         .configurationDisplayName("Widget.DisplayName")
         .description("Widget.Description")
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .supportedFamilies([.systemSmall, .systemMedium, .accessoryInline, .accessoryCircular, .accessoryRectangular])
     }
 }
 
