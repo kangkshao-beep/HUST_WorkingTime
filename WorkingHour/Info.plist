@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSUbiquitousContainers</key>
+	<dict>
+		<key>iCloud.com.tsubuzaki.WorkingHour</key>
+		<dict>
+			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
+			<true/>
+			<key>NSUbiquitousContainerName</key>
+			<string>Timesheet</string>
+			<key>NSUbiquitousContainerSupportedFolderLevels</key>
+			<string>Any</string>
+		</dict>
+	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+		<string>fetch</string>
+		<string>location</string>
+	</array>
+	<key>UIFileSharingEnabled</key>
+	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Working Hour uses your location to automatically clock you in and out when you arrive at or leave your workplace.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Working Hour uses your location to set up workplace geofences for automatic clock-in and clock-out.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Working Hour uses your location to automatically clock you in and out when you arrive at or leave your workplace.</string>
+</dict>
+</plist>

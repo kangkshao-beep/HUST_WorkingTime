@@ -1,0 +1,175 @@
+//
+//  SettingsManager.swift
+//  WorkingHour
+//
+//  Created by Assistant on 2026/02/07.
+//
+
+import Foundation
+
+@MainActor
+@Observable
+final class SettingsManager {
+
+    static let shared = SettingsManager()
+
+    private let defaults = UserDefaults(suiteName: "group.com.tsubuzaki.WorkingHour") ?? UserDefaults.standard
+
+    // MARK: - Keys
+
+    private enum Keys {
+        static let standardWorkingHours = "standardWorkingHours"
+        static let defaultBreakDuration = "defaultBreakDuration"
+        static let clockInReminderEnabled = "clockInReminderEnabled"
+        static let clockOutReminderEnabled = "clockOutReminderEnabled"
+        static let clockInReminderTime = "clockInReminderTime"
+        static let clockOutReminderTime = "clockOutReminderTime"
+        static let notificationsLastScheduledDate = "notificationsLastScheduledDate"
+        static let geofencingEnabled = "geofencingEnabled"
+        static let autoClockInEnabled = "autoClockInEnabled"
+        static let autoClockOutEnabled = "autoClockOutEnabled"
+    }
+
+    // MARK: - Properties
+
+    var standardWorkingHours: TimeInterval {
+        get {
+            let value = defaults.double(forKey: Keys.standardWorkingHours)
+            return value > 0 ? value : 8 * 3600
+        }
+        set {
+            defaults.set(newValue, forKey: Keys.standardWorkingHours)
+        }
+    }
+
+    var defaultBreakDuration: TimeInterval {
+        get {
+            let value = defaults.double(forKey: Keys.defaultBreakDuration)
+            if defaults.object(forKey: Keys.defaultBreakDuration) == nil {
+                return 3600
+            }
+            return value
+        }
+        set {
+            defaults.set(newValue, forKey: Keys.defaultBreakDuration)
+        }
+    }
+
+    var clockInReminderEnabled: Bool {
+        get {
+            defaults.bool(forKey: Keys.clockInReminderEnabled)
+        }
+        set {
+            defaults.set(newValue, forKey: Keys.clockInReminderEnabled)
+        }
+    }
+
+    var clockOutReminderEnabled: Bool {
+        get {
+            defaults.bool(forKey: Keys.clockOutReminderEnabled)
+        }
+        set {
+            defaults.set(newValue, forKey: Keys.clockOutReminderEnabled)
+        }
+    }
+
+    /// Stored as seconds since midnight
+    var clockInReminderTime: Double {
+        get {
+            let value = defaults.double(forKey: Keys.clockInReminderTime)
+            if defaults.object(forKey: Keys.clockInReminderTime) == nil {
+                return 8 * 3600 // Default: 08:00
+            }
+            return value
+        }
+        set {
+            defaults.set(newValue, forKey: Keys.clockInReminderTime)
+        }
+    }
+
+    /// Stored as seconds since midnight
+    var clockOutReminderTime: Double {
+        get {
+            let value = defaults.double(forKey: Keys.clockOutReminderTime)
+            if defaults.object(forKey: Keys.clockOutReminderTime) == nil {
+                return 17 * 3600 // Default: 17:00
+            }
+            return value
+        }
+        set {
+            defaults.set(newValue, forKey: Keys.clockOutReminderTime)
+        }
+    }
+
+    /// The date when notifications were last bulk-scheduled, or `nil` if never.
+    var notificationsLastScheduledDate: Date? {
+        get {
+            defaults.object(forKey: Keys.notificationsLastScheduledDate) as? Date
+        }
+        set {
+            defaults.set(newValue, forKey: Keys.notificationsLastScheduledDate)
+        }
+    }
+
+    var geofencingEnabled: Bool {
+        get {
+            defaults.bool(forKey: Keys.geofencingEnabled)
+        }
+        set {
+            defaults.set(newValue, forKey: Keys.geofencingEnabled)
+        }
+    }
+
+    var autoClockInEnabled: Bool {
+        get {
+            defaults.bool(forKey: Keys.autoClockInEnabled)
+        }
+        set {
+            defaults.set(newValue, forKey: Keys.autoClockInEnabled)
+        }
+    }
+
+    var autoClockOutEnabled: Bool {
+        get {
+            defaults.bool(forKey: Keys.autoClockOutEnabled)
+        }
+        set {
+            defaults.set(newValue, forKey: Keys.autoClockOutEnabled)
+        }
+    }
+
+    /// Convenience: returns `DateComponents` (hour + minute) for the stored clock-in time.
+    var clockInReminderTimeComponents: DateComponents {
+        let totalSeconds = Int(clockInReminderTime)
+        var components = DateComponents()
+        components.hour = totalSeconds / 3600
+        components.minute = (totalSeconds % 3600) / 60
+        return components
+    }
+
+    /// Convenience: returns `DateComponents` (hour + minute) for the stored clock-out time.
+    var clockOutReminderTimeComponents: DateComponents {
+        let totalSeconds = Int(clockOutReminderTime)
+        var components = DateComponents()
+        components.hour = totalSeconds / 3600
+        components.minute = (totalSeconds % 3600) / 60
+        return components
+    }
+
+    // MARK: - Initialization
+
+    private init() {
+        // Register defaults for first launch
+        defaults.register(defaults: [
+            Keys.standardWorkingHours: 8 * 3600,
+            Keys.defaultBreakDuration: 3600,
+            Keys.clockInReminderEnabled: false,
+            Keys.clockOutReminderEnabled: false,
+            Keys.clockInReminderTime: 8 * 3600,
+            Keys.clockOutReminderTime: 17 * 3600,
+            Keys.geofencingEnabled: false,
+            Keys.autoClockInEnabled: true,
+            Keys.autoClockOutEnabled: true
+        ])
+    }
+}
