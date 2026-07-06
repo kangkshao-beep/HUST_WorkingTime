@@ -9,10 +9,10 @@ import Foundation
 import Komponents
 
 enum TabType: Int, TabTypeProtocol {
-    case timesheet = 0
-    case history = 1
-    case projects = 2
-    case more = 3
+    case today = 0
+    case month = 1
+    case history = 2
+    case settings = 3
 
-    static var defaultTab: TabType = .timesheet
+    static var defaultTab: TabType = .today
 }

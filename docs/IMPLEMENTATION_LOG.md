@@ -47,3 +47,43 @@ Known issue:
 
 Next step:
 - Link the local `AttendanceKit` package into the Xcode project and build the iPhone attendance MVP source.
+
+
+## 2026-07-06 - Phase 2 iPhone MVP and Snapshot Foundation
+
+Modified files:
+- `WorkingHour/Features/Attendance/**`
+- `Shared/Attendance/AttendanceStorageRecord.swift`
+- `Shared/WidgetSupport/WidgetSnapshotStore.swift`
+- `Shared/Managers/ModelConfiguration.swift`
+- `WorkingHour/Views/App.swift`
+- `WorkingHour/Views/MainTabView.swift`
+- `WorkingHour/Enums/TabType.swift`
+- `Ushio/Home Screen Widget/**`
+- `WorkingHour.xcodeproj/project.pbxproj`
+- `docs/ARCHITECTURE.md`
+
+Build command:
+- `swift build --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-build`
+
+Result:
+- Passed for shared business package.
+
+App build command:
+- `xcodebuild -list -project WorkingHour.xcodeproj`
+
+Result:
+- Blocked because active developer directory is `/Library/Developer/CommandLineTools`; `xcodebuild` requires Xcode.
+
+Test command:
+- `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-build`
+
+Result:
+- Blocked because `XCTest` is unavailable under the current CommandLineTools setup.
+
+Known issue:
+- iOS app/widget compile must be verified after installing/selecting Xcode.
+- macOS/watchOS targets are documented but not generated in this environment.
+
+Next step:
+- With Xcode available, run `xcodebuild -list`, build the `Working Hour` and `Ushio` schemes, then fix any compiler issues in the app/widget source.

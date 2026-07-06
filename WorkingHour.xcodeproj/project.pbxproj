@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A10000000000000000000001 /* AttendanceKit in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000003 /* AttendanceKit */; };
+		A10000000000000000000002 /* AttendanceKit in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000003 /* AttendanceKit */; };
 		E4260F9A2CB975F30078946D /* Komponents in Frameworks */ = {isa = PBXBuildFile; productRef = E4260F992CB975F30078946D /* Komponents */; };
 		E4260FB52CBAB8C20078946D /* xlsxwriter in Frameworks */ = {isa = PBXBuildFile; productRef = E4260FB42CBAB8C20078946D /* xlsxwriter */; };
 		E44D37EA2D06EF5F006C9F1F /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E44D37E92D06EF5E006C9F1F /* WidgetKit.framework */; };
@@ -100,6 +102,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A10000000000000000000001 /* AttendanceKit in Frameworks */,
 				E4260FB52CBAB8C20078946D /* xlsxwriter in Frameworks */,
 				E4260F9A2CB975F30078946D /* Komponents in Frameworks */,
 			);
@@ -109,6 +112,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A10000000000000000000002 /* AttendanceKit in Frameworks */,
 				E44D37EC2D06EF5F006C9F1F /* SwiftUI.framework in Frameworks */,
 				E44D37EA2D06EF5F006C9F1F /* WidgetKit.framework in Frameworks */,
 			);
@@ -172,6 +176,7 @@
 			packageProductDependencies = (
 				E4260F992CB975F30078946D /* Komponents */,
 				E4260FB42CBAB8C20078946D /* xlsxwriter */,
+				A10000000000000000000003 /* AttendanceKit */,
 			);
 			productName = WorkingHour;
 			productReference = E4260F782CB6B0EA0078946D /* Working Hour.app */;
@@ -195,6 +200,7 @@
 			);
 			name = Ushio;
 			packageProductDependencies = (
+				A10000000000000000000003 /* AttendanceKit */,
 			);
 			productName = UshioExtension;
 			productReference = E44D37E72D06EF5E006C9F1F /* Ushio.appex */;
@@ -231,6 +237,7 @@
 			packageReferences = (
 				E4260F982CB975F30078946D /* XCRemoteSwiftPackageReference "Komponents" */,
 				E4260FB32CBAB8C20078946D /* XCRemoteSwiftPackageReference "xlsxwriter" */,
+				A10000000000000000000004 /* XCLocalSwiftPackageReference "AttendanceKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E4260F792CB6B0EA0078946D /* Products */;
@@ -600,6 +607,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		A10000000000000000000004 /* XCLocalSwiftPackageReference "AttendanceKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/AttendanceKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		E4260F982CB975F30078946D /* XCRemoteSwiftPackageReference "Komponents" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -620,6 +634,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A10000000000000000000003 /* AttendanceKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A10000000000000000000004 /* XCLocalSwiftPackageReference "AttendanceKit" */;
+			productName = AttendanceKit;
+		};
 		E4260F992CB975F30078946D /* Komponents */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E4260F982CB975F30078946D /* XCRemoteSwiftPackageReference "Komponents" */;

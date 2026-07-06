@@ -13,27 +13,18 @@ struct MainTabView: View {
 
     var body: some View {
         TabView(selection: $navigator.selectedTab) {
-            Tab("Tab.TimeClock",
-                systemImage: "deskclock.fill",
-                value: .timesheet) {
-                TimeClockView()
+            Tab("今天", systemImage: "clock.badge.checkmark", value: .today) {
+                AttendanceTodayView()
             }
-            Tab("Tab.History",
-                systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90",
-                value: .history) {
-                TimesheetView()
+            Tab("本月", systemImage: "calendar", value: .month) {
+                AttendanceMonthView()
             }
-            Tab("Tab.Projects",
-                systemImage: "folder.fill",
-                value: .projects) {
-                ProjectsView()
+            Tab("历史", systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90", value: .history) {
+                AttendanceHistoryView()
             }
-            Tab("Tab.More",
-                systemImage: "ellipsis",
-                value: .more) {
-                MoreView()
+            Tab("设置", systemImage: "gearshape", value: .settings) {
+                AttendanceSettingsView()
             }
-
         }
     }
 }
