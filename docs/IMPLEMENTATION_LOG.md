@@ -93,6 +93,7 @@ Next step:
 
 Modified files:
 - `Shared/Managers/ModelConfiguration.swift`
+- `Shared/Attendance/AttendanceStorageRecord.swift`
 - `docs/IMPLEMENTATION_LOG.md`
 
 Build command:
@@ -101,6 +102,7 @@ Build command:
 Result:
 - SwiftData SDK interface was inspected locally and confirms `ModelConfiguration.CloudKitDatabase.private(_:)` is available.
 - Production model configuration now requests CloudKit private database `iCloud.com.tsubuzaki.WorkingHour` while retaining non-fatal local and in-memory fallbacks.
+- Attendance SwiftData storage fields now provide defaults so the schema is friendlier to CloudKit-backed initialization.
 
 Known issue:
 - Real CloudKit sync still requires Signing & Capabilities setup and device/Xcode verification.

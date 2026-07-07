@@ -4,15 +4,15 @@ import SwiftData
 
 @Model
 final class AttendanceStorageRecord {
-    var id: UUID
-    var dayKey: String
-    var clockInAt: Date
-    var targetEndAt: Date
+    var id: UUID = UUID()
+    var dayKey: String = ""
+    var clockInAt: Date = Date()
+    var targetEndAt: Date = Date()
     var actualClockOutAt: Date?
-    var createdAt: Date
-    var updatedAt: Date
-    var sourceDevice: String
-    var isManualClockIn: Bool
+    var createdAt: Date = Date()
+    var updatedAt: Date = Date()
+    var sourceDevice: String = ""
+    var isManualClockIn: Bool = false
 
     init(record: AttendanceRecord) {
         self.id = record.id
