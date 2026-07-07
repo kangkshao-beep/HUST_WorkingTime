@@ -136,3 +136,39 @@ Changes:
 
 Known issue:
 - Full app/widget compiler validation still requires Xcode.app.
+
+
+## 2026-07-07 - AttendanceKit Executable Checks
+
+Modified files:
+- `Packages/AttendanceKit/Package.swift`
+- `Packages/AttendanceKit/Sources/AttendanceKitChecks/main.swift`
+- `Packages/AttendanceKit/Tests/AttendanceKitTests/**`
+- `docs/IMPLEMENTATION_LOG.md`
+- `docs/TEST_MATRIX.md`
+
+Build command:
+- `swift build --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-check-build`
+
+Result:
+- Passed.
+
+Executable check command:
+- `swift run --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-check-build AttendanceKitChecks`
+
+Result:
+- Passed.
+
+Formal test command:
+- `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-test-build-xctest`
+
+Result:
+- Blocked in the current CommandLineTools environment because the `XCTest` module is unavailable.
+
+Changes:
+- Added `AttendanceKitChecks`, a Foundation-only executable verification target that can run under the current limited toolchain.
+- Kept the formal `AttendanceKitTests` XCTest target for a complete Xcode developer directory.
+- Covered weekday/month rules, Asia/Shanghai and America/Los_Angeles day keys, required 80% rounding, engine status and countdown behavior, duplicate collapse, widget refresh dates, and watch sync idempotence/fallback queue behavior.
+
+Known issue:
+- `swift test` requires installing/selecting a full Xcode.app developer directory on this machine.

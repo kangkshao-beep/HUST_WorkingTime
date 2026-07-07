@@ -1,5 +1,4 @@
 import Foundation
-import XCTest
 @testable import AttendanceKit
 
 func makeCalendar(_ identifier: String = "Asia/Shanghai") -> WorkdayCalendar {

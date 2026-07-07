@@ -8,8 +8,10 @@ final class SyncTests: XCTestCase {
         let service = WatchSyncService(queue: queue)
         let id = UUID()
         let command = WatchCommand.clockInNow(commandID: id)
-        XCTAssertTrue(await service.shouldProcess(command))
-        XCTAssertFalse(await service.shouldProcess(command))
+        let shouldProcessFirstCommand = await service.shouldProcess(command)
+        let shouldProcessDuplicateCommand = await service.shouldProcess(command)
+        XCTAssertTrue(shouldProcessFirstCommand)
+        XCTAssertFalse(shouldProcessDuplicateCommand)
     }
 
     func testUnreachableFallbackQueuesCommand() async {

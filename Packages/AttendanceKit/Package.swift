@@ -10,10 +10,12 @@ let package = Package(
         .watchOS(.v10)
     ],
     products: [
-        .library(name: "AttendanceKit", targets: ["AttendanceKit"])
+        .library(name: "AttendanceKit", targets: ["AttendanceKit"]),
+        .executable(name: "AttendanceKitChecks", targets: ["AttendanceKitChecks"])
     ],
     targets: [
         .target(name: "AttendanceKit"),
+        .executableTarget(name: "AttendanceKitChecks", dependencies: ["AttendanceKit"]),
         .testTarget(name: "AttendanceKitTests", dependencies: ["AttendanceKit"])
     ]
 )
