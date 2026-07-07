@@ -87,3 +87,20 @@ Known issue:
 
 Next step:
 - With Xcode available, run `xcodebuild -list`, build the `Working Hour` and `Ushio` schemes, then fix any compiler issues in the app/widget source.
+
+
+## 2026-07-07 - Phase 7 CloudKit Fallback Skeleton
+
+Modified files:
+- `Shared/Managers/ModelConfiguration.swift`
+- `docs/IMPLEMENTATION_LOG.md`
+
+Build command:
+- Not run through Xcode; Xcode.app is unavailable in this environment.
+
+Result:
+- SwiftData SDK interface was inspected locally and confirms `ModelConfiguration.CloudKitDatabase.private(_:)` is available.
+- Production model configuration now requests CloudKit private database `iCloud.com.tsubuzaki.WorkingHour` while retaining non-fatal local and in-memory fallbacks.
+
+Known issue:
+- Real CloudKit sync still requires Signing & Capabilities setup and device/Xcode verification.

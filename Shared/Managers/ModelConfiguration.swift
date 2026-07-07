@@ -36,20 +36,21 @@ public class SharedModelContainer {
 
         let appGroupConfiguration = ModelConfiguration(
             schema: schema,
-            groupContainer: .identifier("group.com.tsubuzaki.WorkingHour")
+            groupContainer: .identifier("group.com.tsubuzaki.WorkingHour"),
+            cloudKitDatabase: .private("iCloud.com.tsubuzaki.WorkingHour")
         )
 
         do {
             return (try ModelContainer(for: schema, configurations: [appGroupConfiguration]), nil)
         } catch {
             let appGroupError = error.localizedDescription
-            log("App Group SwiftData container failed: \(appGroupError)", prefix: "persistence")
+            log("CloudKit/App Group SwiftData container failed: \(appGroupError)", prefix: "persistence")
 
             let localConfiguration = ModelConfiguration(schema: schema)
             do {
                 return (
                     try ModelContainer(for: schema, configurations: [localConfiguration]),
-                    "App Group SwiftData 初始化失败，已切换到本机本地存储：\(appGroupError)"
+                    "CloudKit 或 App Group SwiftData 初始化失败，已切换到本机本地存储：\(appGroupError)"
                 )
             } catch {
                 let localError = error.localizedDescription
