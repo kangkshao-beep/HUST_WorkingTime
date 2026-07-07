@@ -106,3 +106,33 @@ Result:
 
 Known issue:
 - Real CloudKit sync still requires Signing & Capabilities setup and device/Xcode verification.
+
+
+## 2026-07-07 - Phase 2/4 Static Polish
+
+Modified files:
+- `WorkingHour/Features/Attendance/AttendanceTodayView.swift`
+- `WorkingHour/Info.plist`
+- `Ushio/Home Screen Widget/HomeWidgetProvider.swift`
+- `Ushio/Home Screen Widget/HomeWidgetView.swift`
+
+Build command:
+- `swift build --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-build`
+
+Result:
+- Passed.
+
+Validation commands:
+- `plutil -lint WorkingHour/Info.plist`
+- `plutil -lint WorkingHour.xcodeproj/project.pbxproj`
+
+Result:
+- Both passed.
+
+Changes:
+- Widget deep links now have an app URL scheme registration: `workdaycountdown`.
+- Editing today's clock-in time now updates the existing attendance record instead of creating a replacement record with a new UUID.
+- Widget source files now explicitly import Foundation for date/math APIs.
+
+Known issue:
+- Full app/widget compiler validation still requires Xcode.app.

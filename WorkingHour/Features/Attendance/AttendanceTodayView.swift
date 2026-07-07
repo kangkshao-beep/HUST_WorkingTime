@@ -34,7 +34,7 @@ struct AttendanceTodayView: View {
                 store.configure(modelContext: modelContext)
             }
             .sheet(isPresented: $showingManualClockIn) {
-                ManualClockInSheet(store: store)
+                ManualClockInSheet(store: store, existingRecord: store.todayRecord())
             }
         }
     }
@@ -215,8 +215,15 @@ private struct MonthProgressCard: View {
 private struct ManualClockInSheet: View {
     @Environment(\.dismiss) private var dismiss
     let store: AttendanceStore
-    @State private var selectedTime = Date()
+    let existingRecord: AttendanceRecord?
+    @State private var selectedTime: Date
     @State private var validationMessage: String?
+
+    init(store: AttendanceStore, existingRecord: AttendanceRecord?) {
+        self.store = store
+        self.existingRecord = existingRecord
+        _selectedTime = State(initialValue: existingRecord?.clockInAt ?? Date())
+    }
 
     var body: some View {
         NavigationStack {
@@ -243,7 +250,15 @@ private struct ManualClockInSheet: View {
                             validationMessage = "不能选择未来时间。"
                             return
                         }
-                        store.clockIn(at: selectedTime, isManual: true)
+                        if let existingRecord {
+                            store.update(
+                                record: existingRecord,
+                                clockInAt: selectedTime,
+                                actualClockOutAt: existingRecord.actualClockOutAt
+                            )
+                        } else {
+                            store.clockIn(at: selectedTime, isManual: true)
+                        }
                         dismiss()
                     }
                 }
