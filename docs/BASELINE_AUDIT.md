@@ -18,6 +18,7 @@ Branch at audit start: not a git repository. A baseline repository was initializ
 - `xcodebuild -list -project WorkingHour.xcodeproj`: passed after Xcode install; project targets and schemes resolve, including the local `AttendanceKit` package.
 - `xcrun simctl list runtimes`: passed after Xcode install but returned no installed runtimes.
 - `xcrun simctl list devices available`: passed after Xcode install but returned no available devices.
+- `xcodebuild -downloadPlatform iOS`: attempted after Xcode install; download started from 0%, reached about 9.7% / 830 MB of 8.52 GB, then was cancelled because throughput had dropped to less than 1 MB per 30 seconds.
 
 ## Current File Tree Summary
 
@@ -83,6 +84,8 @@ iOS app compilation still cannot start on this machine because Xcode reports the
 - `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphoneos -destination "generic/platform=iOS" -derivedDataPath /private/tmp/WorkingHourDerivedDataDevice CODE_SIGNING_ALLOWED=NO build`: blocked by the same destination/platform error.
 
 This is still an environment/setup blocker, not yet a source-code compile result. Install the iOS 26.5 platform/runtime from Xcode Settings > Components, then rerun the build commands in `docs/MANUAL_SETUP.md`.
+
+The CLI platform download was also attempted, but it stalled at about 9.7% / 830 MB of 8.52 GB and was cancelled. Using Xcode Settings > Components remains the recommended path for this machine.
 
 ## Upstream Feature Handling
 

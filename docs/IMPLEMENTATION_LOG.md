@@ -250,3 +250,4 @@ Result:
 
 Known issue:
 - Install the iOS 26.5 platform/runtime in Xcode Settings > Components before rerunning app/widget builds or simulator-based checks.
+- CLI install was attempted with `xcodebuild -downloadPlatform iOS`, but the 8.52 GB download stalled at about 9.7% / 830 MB and was cancelled.

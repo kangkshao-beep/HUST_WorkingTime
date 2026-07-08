@@ -28,5 +28,6 @@
 | `xcodebuild -list -project WorkingHour.xcodeproj` | Pass | Resolves project schemes and package graph under Xcode 26.6. |
 | `xcrun simctl list runtimes` | Blocked | Command succeeds but no runtimes are installed. |
 | `xcrun simctl list devices available` | Blocked | Command succeeds but no devices are available. |
+| `xcodebuild -downloadPlatform iOS` | Blocked | Download started from 0%, reached about 9.7% / 830 MB of 8.52 GB, then was cancelled after throughput dropped to less than 1 MB per 30 seconds. |
 | `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedData CODE_SIGNING_ALLOWED=NO build` | Blocked | Xcode reports iOS 26.5 is not installed and asks to install it from Xcode Settings > Components. |
 | `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphoneos -destination "generic/platform=iOS" -derivedDataPath /private/tmp/WorkingHourDerivedDataDevice CODE_SIGNING_ALLOWED=NO build` | Blocked | Same iOS 26.5 platform/runtime blocker before compilation starts. |
