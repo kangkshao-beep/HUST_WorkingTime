@@ -2,12 +2,27 @@
 
 ## Xcode
 
-Install Xcode.app and select it before running app builds:
+Install Xcode.app, select it, and install the required iOS platform/runtime before running app builds:
 
 ```sh
 sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 xcodebuild -version
 xcrun simctl list devices available
+```
+
+Current verification status on 2026-07-08:
+
+- Xcode 26.6 is installed and selected at `/Applications/Xcode.app/Contents/Developer`.
+- `xcodebuild -list -project WorkingHour.xcodeproj` passes.
+- `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-xcode-test` passes with 30 XCTest cases.
+- iOS app builds are still blocked because Xcode reports `iOS 26.5 is not installed`.
+- `xcodebuild -downloadPlatform iOS` was attempted, but the 8.52 GB simulator download stalled at about 9.7% / 830 MB and was cancelled.
+
+Use Xcode > Settings > Components to install the iOS 26.5 platform/runtime, then rerun:
+
+```sh
+xcrun simctl list runtimes
+xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedData CODE_SIGNING_ALLOWED=NO build
 ```
 
 ## Identifiers To Replace

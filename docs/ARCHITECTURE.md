@@ -66,4 +66,4 @@ The app writes `AttendanceWidgetSnapshot` JSON into the App Group container. The
 
 ## Remaining Target Work
 
-Native macOS and watchOS targets still require a complete Xcode installation to create and verify safely. The current environment cannot run `xcodebuild` or `simctl` because Xcode.app is not installed/selected. The shared attendance store and dashboard source are prepared for those targets.
+Native macOS and watchOS targets still require Xcode project changes and compiler verification. Xcode 26.6 is now installed and selected, but this machine still lacks an installed/registered iOS 26.5 platform/runtime, so iOS app/widget builds cannot start yet. The shared attendance store and dashboard source are prepared for those targets.
