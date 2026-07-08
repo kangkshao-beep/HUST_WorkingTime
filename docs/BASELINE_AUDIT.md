@@ -19,6 +19,13 @@ Branch at audit start: not a git repository. A baseline repository was initializ
 - `xcrun simctl list runtimes`: passed after Xcode install but returned no installed runtimes.
 - `xcrun simctl list devices available`: passed after Xcode install but returned no available devices.
 - `xcodebuild -downloadPlatform iOS`: attempted after Xcode install; download started from 0%, reached about 9.7% / 830 MB of 8.52 GB, then was cancelled because throughput had dropped to less than 1 MB per 30 seconds.
+- `xcrun simctl list runtimes`: passed after manual Xcode Components install and listed iOS 26.5 plus watchOS 26.5.
+- `xcrun simctl list devices available`: passed after manual Xcode Components install and listed iOS 26.5 plus watchOS 26.5 devices.
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedData CODE_SIGNING_ALLOWED=NO build`: passed.
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Ushio" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedDataUshio CODE_SIGNING_ALLOWED=NO build`: passed.
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphoneos -destination "generic/platform=iOS" -derivedDataPath /private/tmp/WorkingHourDerivedDataDevice CODE_SIGNING_ALLOWED=NO build`: passed.
+- `xcrun simctl install F6040390-A952-4322-B4EE-EC3FD2E3387A "/private/tmp/WorkingHourDerivedData/Build/Products/Debug-iphonesimulator/Working Hour.app"`: passed.
+- `xcrun simctl launch F6040390-A952-4322-B4EE-EC3FD2E3387A com.tsubuzaki.WorkingHour`: passed and returned pid 48599.
 
 ## Current File Tree Summary
 
@@ -78,14 +85,19 @@ After Xcode 26.6 was installed and selected, package resolution and unit tests c
 - `xcodebuild -list -project WorkingHour.xcodeproj`: passed.
 - `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-xcode-test`: passed with 30 XCTest cases.
 
-iOS app compilation still cannot start on this machine because Xcode reports the iOS 26.5 platform/runtime as unavailable:
+Before manual Xcode Components install, iOS app compilation could not start because Xcode reported the iOS 26.5 platform/runtime as unavailable:
 
 - `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedData CODE_SIGNING_ALLOWED=NO build`: blocked before compilation with `iOS 26.5 is not installed. Please download and install the platform from Xcode > Settings > Components.`
 - `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphoneos -destination "generic/platform=iOS" -derivedDataPath /private/tmp/WorkingHourDerivedDataDevice CODE_SIGNING_ALLOWED=NO build`: blocked by the same destination/platform error.
 
-This is still an environment/setup blocker, not yet a source-code compile result. Install the iOS 26.5 platform/runtime from Xcode Settings > Components, then rerun the build commands in `docs/MANUAL_SETUP.md`.
-
 The CLI platform download was also attempted, but it stalled at about 9.7% / 830 MB of 8.52 GB and was cancelled. Using Xcode Settings > Components remains the recommended path for this machine.
+
+After manual Xcode Components install, baseline iOS compilation and launch checks passed:
+
+- `Working Hour` iOS Simulator Debug build passed.
+- `Ushio` iOS Simulator Debug build passed.
+- `Working Hour` iPhoneOS generic Debug build passed with signing disabled.
+- `Working Hour.app` installed and launched on iPhone 17 Pro simulator.
 
 ## Upstream Feature Handling
 
@@ -96,7 +108,6 @@ The CLI platform download was also attempted, but it stalled at about 9.7% / 830
 
 ## Main Refactor Risks
 
-- Xcode.app is now available, but the iOS 26.5 platform/runtime is not installed or not registered with CoreSimulator, so app/widget/watch target builds cannot be verified yet.
 - Existing deployment targets are higher than the requested minimums; lowering requires Xcode verification.
 - Current App Group/iCloud identifiers use the upstream author namespace and must be replaced manually by the project owner.
-- Adding macOS/watchOS targets without Xcode project generation support is high risk; this pass focuses on shared core, iPhone MVP source, snapshot logic, and documentation, then records remaining target work.
+- Native macOS/watchOS target creation remains future work; iOS app/widget build verification is now available on this machine.

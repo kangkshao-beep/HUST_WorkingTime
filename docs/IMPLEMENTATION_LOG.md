@@ -251,3 +251,47 @@ Result:
 Known issue:
 - Install the iOS 26.5 platform/runtime in Xcode Settings > Components before rerunning app/widget builds or simulator-based checks.
 - CLI install was attempted with `xcodebuild -downloadPlatform iOS`, but the 8.52 GB download stalled at about 9.7% / 830 MB and was cancelled.
+
+
+## 2026-07-08 - iOS Runtime Build and Launch Verification
+
+Modified files:
+- `docs/BASELINE_AUDIT.md`
+- `docs/ARCHITECTURE.md`
+- `docs/IMPLEMENTATION_LOG.md`
+- `docs/MANUAL_SETUP.md`
+- `docs/TEST_MATRIX.md`
+
+Environment checks:
+- `xcrun simctl list runtimes`: passed and listed iOS 26.5 plus watchOS 26.5.
+- `xcrun simctl list devices available`: passed and listed iPhone/iPad plus Apple Watch simulator devices.
+
+Build commands:
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedData CODE_SIGNING_ALLOWED=NO build`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Ushio" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedDataUshio CODE_SIGNING_ALLOWED=NO build`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphoneos -destination "generic/platform=iOS" -derivedDataPath /private/tmp/WorkingHourDerivedDataDevice CODE_SIGNING_ALLOWED=NO build`
+
+Result:
+- Passed. The iOS app and widget extension compile for simulator, and the app compiles for generic iOS device with signing disabled.
+- Xcode emits a non-fatal warning that SwiftLint is not installed.
+
+Launch commands:
+- `xcrun simctl boot F6040390-A952-4322-B4EE-EC3FD2E3387A`
+- `xcrun simctl bootstatus F6040390-A952-4322-B4EE-EC3FD2E3387A -b`
+- `xcrun simctl install F6040390-A952-4322-B4EE-EC3FD2E3387A "/private/tmp/WorkingHourDerivedData/Build/Products/Debug-iphonesimulator/Working Hour.app"`
+- `xcrun simctl launch F6040390-A952-4322-B4EE-EC3FD2E3387A com.tsubuzaki.WorkingHour`
+
+Result:
+- Passed. `simctl launch` returned pid 48599, and `simctl get_app_container` returned the installed app bundle path.
+
+Validation commands:
+- `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-xcode-test`
+- `plutil -lint WorkingHour.xcodeproj/project.pbxproj`
+- `plutil -lint WorkingHour/Info.plist`
+- `git diff --check`
+
+Result:
+- Passed. `AttendanceKitTests` executed 30 XCTest cases with 0 failures.
+
+Known issue:
+- Manual UI workflow checks, real CloudKit sync, physical-device signing, and native macOS/watchOS targets remain pending.
