@@ -209,3 +209,44 @@ Result:
 
 Known issue:
 - Native macOS/watchOS target creation and app/widget compiler verification still require full Xcode.app.
+
+
+## 2026-07-08 - Xcode Baseline Verification
+
+Modified files:
+- `Packages/AttendanceKit/Tests/AttendanceKitTests/DuplicateAndMonthProgressTests.swift`
+- `Packages/AttendanceKit/Tests/AttendanceKitTests/WidgetTimelineTests.swift`
+- `docs/BASELINE_AUDIT.md`
+- `docs/IMPLEMENTATION_LOG.md`
+- `docs/TEST_MATRIX.md`
+
+Changes:
+- Aligned duplicate/month progress XCTest expectations with the actual July 2026 elapsed workday count.
+- Aligned weekend widget timeline XCTest expectations with the production logic: refresh at the next day boundary and no later than the next workday.
+- Recorded the Xcode follow-up baseline now that Xcode 26.6 is installed and selected.
+
+Environment checks:
+- `xcode-select -p`: `/Applications/Xcode.app/Contents/Developer`
+- `xcodebuild -version`: Xcode 26.6, build 17F113.
+- `xcodebuild -list -project WorkingHour.xcodeproj`: passed and resolved `AttendanceKit`, `Komponents`, `xlsxwriter.swift`, and `libxlsxwriter`.
+- `xcrun simctl list runtimes`: passed but returned no installed runtimes.
+- `xcrun simctl list devices available`: passed but returned no available devices.
+
+Validation commands:
+- `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-xcode-test`
+- `plutil -lint WorkingHour.xcodeproj/project.pbxproj`
+- `plutil -lint WorkingHour/Info.plist`
+- `git diff --check`
+
+Result:
+- Passed. `AttendanceKitTests` executed 30 XCTest cases with 0 failures.
+
+App build commands:
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedData CODE_SIGNING_ALLOWED=NO build`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphoneos -destination "generic/platform=iOS" -derivedDataPath /private/tmp/WorkingHourDerivedDataDevice CODE_SIGNING_ALLOWED=NO build`
+
+Result:
+- Blocked before compilation because Xcode reports `iOS 26.5 is not installed. Please download and install the platform from Xcode > Settings > Components.`
+
+Known issue:
+- Install the iOS 26.5 platform/runtime in Xcode Settings > Components before rerunning app/widget builds or simulator-based checks.

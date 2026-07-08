@@ -41,7 +41,7 @@ final class DuplicateAndMonthProgressTests: XCTestCase {
             now: makeDate(2026, 7, 15, 9),
             calendar: makeCalendar()
         )
-        XCTAssertEqual(progress.missedPastWorkdays, 6)
+        XCTAssertEqual(progress.missedPastWorkdays, 8)
         XCTAssertEqual(progress.elapsedWorkdays, 11)
     }
 

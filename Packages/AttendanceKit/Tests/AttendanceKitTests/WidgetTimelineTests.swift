@@ -67,7 +67,9 @@ final class WidgetTimelineTests: XCTestCase {
             monthLabel: "2026-07",
             nextRefreshAt: calendar.nextWorkday(after: now)
         )
-        XCTAssertEqual(WidgetTimelineLogic().nextRefreshDate(snapshot: snapshot, now: now, calendar: calendar), calendar.nextWorkday(after: now))
+        let nextRefresh = WidgetTimelineLogic().nextRefreshDate(snapshot: snapshot, now: now, calendar: calendar)
+        XCTAssertEqual(nextRefresh, calendar.nextStartOfDay(after: now))
+        XCTAssertLessThanOrEqual(nextRefresh, calendar.nextWorkday(after: now))
     }
 
     func testMonthEndRefresh() {

@@ -1,6 +1,7 @@
 # Baseline Audit
 
 Date: 2026-07-06
+Xcode follow-up verification: 2026-07-08
 Branch at audit start: not a git repository. A baseline repository was initialized locally and the original import was committed before creating `feat/cross-platform-attendance`.
 
 ## Commands Run
@@ -11,6 +12,12 @@ Branch at audit start: not a git repository. A baseline repository was initializ
 - `find -s . -maxdepth 3 -name '*.xcodeproj' -o -name '*.xcworkspace'`: found `WorkingHour.xcodeproj` and `WorkingHour.xcodeproj/project.xcworkspace`.
 - `xcodebuild -list -project WorkingHour.xcodeproj`: blocked because `xcode-select` points at `/Library/Developer/CommandLineTools`.
 - `xcrun simctl list devices available`: blocked because `simctl` is not available from the current developer directory.
+- `xcode-select -p`: passed after Xcode install; active developer directory is `/Applications/Xcode.app/Contents/Developer`.
+- `xcodebuild -version`: passed with Xcode 26.6, build 17F113.
+- `xcodebuild -showsdks`: passed and listed iOS, iOS Simulator, macOS, tvOS, visionOS, and watchOS 26.5 SDKs.
+- `xcodebuild -list -project WorkingHour.xcodeproj`: passed after Xcode install; project targets and schemes resolve, including the local `AttendanceKit` package.
+- `xcrun simctl list runtimes`: passed after Xcode install but returned no installed runtimes.
+- `xcrun simctl list devices available`: passed after Xcode install but returned no available devices.
 
 ## Current File Tree Summary
 
@@ -63,12 +70,19 @@ The new primary shell will replace this with Today / Month / History / Settings,
 
 ## Baseline Build
 
-Baseline build could not run in this environment:
+The first baseline build could not run because the active developer directory was `/Library/Developer/CommandLineTools`.
 
-- `xcodebuild` error: active developer directory is `/Library/Developer/CommandLineTools`.
-- `simctl` error: utility unavailable from the current developer directory.
+After Xcode 26.6 was installed and selected, package resolution and unit tests could run:
 
-This is an environment/setup blocker, not yet a source-code compile result. Install/select Xcode and rerun the commands in `docs/MANUAL_SETUP.md`.
+- `xcodebuild -list -project WorkingHour.xcodeproj`: passed.
+- `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-xcode-test`: passed with 30 XCTest cases.
+
+iOS app compilation still cannot start on this machine because Xcode reports the iOS 26.5 platform/runtime as unavailable:
+
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedData CODE_SIGNING_ALLOWED=NO build`: blocked before compilation with `iOS 26.5 is not installed. Please download and install the platform from Xcode > Settings > Components.`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphoneos -destination "generic/platform=iOS" -derivedDataPath /private/tmp/WorkingHourDerivedDataDevice CODE_SIGNING_ALLOWED=NO build`: blocked by the same destination/platform error.
+
+This is still an environment/setup blocker, not yet a source-code compile result. Install the iOS 26.5 platform/runtime from Xcode Settings > Components, then rerun the build commands in `docs/MANUAL_SETUP.md`.
 
 ## Upstream Feature Handling
 
@@ -79,7 +93,7 @@ This is an environment/setup blocker, not yet a source-code compile result. Inst
 
 ## Main Refactor Risks
 
-- No Xcode.app is currently available, so app/widget/watch target builds cannot be verified yet.
+- Xcode.app is now available, but the iOS 26.5 platform/runtime is not installed or not registered with CoreSimulator, so app/widget/watch target builds cannot be verified yet.
 - Existing deployment targets are higher than the requested minimums; lowering requires Xcode verification.
 - Current App Group/iCloud identifiers use the upstream author namespace and must be replaced manually by the project owner.
 - Adding macOS/watchOS targets without Xcode project generation support is high risk; this pass focuses on shared core, iPhone MVP source, snapshot logic, and documentation, then records remaining target work.
