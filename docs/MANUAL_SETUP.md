@@ -49,6 +49,8 @@ Widgets read local App Group snapshots. They should not rely on live CloudKit/ne
 Native macOS app and desktop widget should use:
 - Same CloudKit container for durable sync.
 - Mac-local App Group for app-to-widget snapshots.
+- `Shared/Attendance/AttendanceDashboardView(displayStyle: .regular)` as the app root content.
+- `Shared/Attendance/AttendanceStore` for persistence and snapshot writes.
 
 ## Future watchOS Targets
 
@@ -57,6 +59,7 @@ Watch app and complications should use:
 - Local durable store where supported.
 - WatchConnectivity for fast iPhone/watch sync.
 - App Group snapshot for watch complication rendering where applicable.
+- `Shared/Attendance/AttendanceDashboardView(displayStyle: .compact)` for the watch app root content.
 
 ## Simulator vs Device
 

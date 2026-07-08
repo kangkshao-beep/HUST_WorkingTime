@@ -42,6 +42,12 @@ The main navigation is now:
 
 The old timesheet/project/break/geofencing code remains in the repository as legacy code and is not destructively migrated.
 
+## Shared Attendance App Layer
+
+`Shared/Attendance/AttendanceStore.swift` owns app-level persistence orchestration for the new attendance flow. It maps SwiftData storage to `AttendanceKit`, writes widget snapshots, and avoids direct iOS-only device APIs except behind conditional compilation.
+
+`Shared/Attendance/AttendanceDashboardView.swift` is the reusable SwiftUI entry point for future macOS/watchOS app shells. Platform apps should embed it with `.regular` or `.compact` display style instead of duplicating Today/month formulas outside `AttendanceKit`.
+
 ## Persistence
 
 `AttendanceStorageRecord` is the SwiftData storage model for attendance records. It maps to and from `AttendanceKit.AttendanceRecord`.
@@ -60,4 +66,4 @@ The app writes `AttendanceWidgetSnapshot` JSON into the App Group container. The
 
 ## Remaining Target Work
 
-Native macOS and watchOS targets still require a complete Xcode installation to create and verify safely. The current environment cannot run `xcodebuild` or `simctl` because Xcode.app is not installed/selected.
+Native macOS and watchOS targets still require a complete Xcode installation to create and verify safely. The current environment cannot run `xcodebuild` or `simctl` because Xcode.app is not installed/selected. The shared attendance store and dashboard source are prepared for those targets.

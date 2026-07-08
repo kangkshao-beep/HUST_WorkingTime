@@ -1,9 +1,19 @@
 import AttendanceKit
 import Foundation
+import Observation
 import SwiftData
-import SwiftUI
-import UIKit
+
+#if canImport(WidgetKit)
 import WidgetKit
+#endif
+
+#if os(iOS)
+import UIKit
+#endif
+
+#if os(watchOS) && canImport(WatchKit)
+import WatchKit
+#endif
 
 @MainActor
 @Observable
@@ -88,7 +98,7 @@ final class AttendanceStore {
             targetEndAt: engine.targetEnd(for: clockInAt, policy: policy),
             createdAt: now,
             updatedAt: now,
-            sourceDevice: UIDevice.current.name,
+            sourceDevice: AttendanceDeviceName.current,
             isManualClockIn: isManual
         )
         upsert(record)
@@ -141,7 +151,9 @@ final class AttendanceStore {
         let snapshot = makeSnapshot(now: Date())
         do {
             try WidgetSnapshotStore.write(snapshot)
+            #if canImport(WidgetKit)
             WidgetCenter.shared.reloadTimelines(ofKind: "com.tsubuzaki.WorkingHour.Ushio.Home")
+            #endif
         } catch {
             lastErrorMessage = "Widget 快照更新失败：\(error.localizedDescription)"
             log(lastErrorMessage ?? "Snapshot write failed", prefix: "widget")
@@ -207,5 +219,19 @@ final class AttendanceStore {
             monthLabel: monthFormatter.string(from: now),
             nextRefreshAt: workdayCalendar.nextMeaningfulRefreshDate(now: now, targetEndAt: targetEndAt, policy: policy)
         )
+    }
+}
+
+private enum AttendanceDeviceName {
+    static var current: String {
+        #if os(iOS)
+        UIDevice.current.name
+        #elseif os(watchOS) && canImport(WatchKit)
+        WKInterfaceDevice.current().name
+        #elseif os(macOS)
+        Host.current().localizedName ?? ProcessInfo.processInfo.hostName
+        #else
+        ProcessInfo.processInfo.hostName
+        #endif
     }
 }

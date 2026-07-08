@@ -172,3 +172,40 @@ Changes:
 
 Known issue:
 - `swift test` requires installing/selecting a full Xcode.app developer directory on this machine.
+
+
+## 2026-07-08 - Shared Attendance App Layer
+
+Modified files:
+- `WorkingHour/Features/Attendance/AttendanceStore.swift`
+- `Shared/Attendance/AttendanceStore.swift`
+- `Shared/Attendance/AttendanceDashboardView.swift`
+- `docs/ARCHITECTURE.md`
+- `docs/MANUAL_SETUP.md`
+- `docs/IMPLEMENTATION_LOG.md`
+- `docs/TEST_MATRIX.md`
+
+Changes:
+- Moved `AttendanceStore` into `Shared/Attendance` so future macOS/watchOS app targets can reuse the same SwiftData-to-AttendanceKit orchestration.
+- Replaced direct `UIDevice` usage with conditional platform device naming.
+- Guarded WidgetKit timeline reload behind `canImport(WidgetKit)`.
+- Added `AttendanceDashboardView` as a reusable regular/compact SwiftUI app shell for future macOS/watchOS targets.
+
+Validation commands:
+- `swift run --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-check-build AttendanceKitChecks`
+- `swift build --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-check-build`
+- `plutil -lint WorkingHour.xcodeproj/project.pbxproj`
+- `plutil -lint WorkingHour/Info.plist`
+- `git diff --check`
+
+Result:
+- Passed.
+
+App build command:
+- `xcodebuild -list -project WorkingHour.xcodeproj`
+
+Result:
+- Blocked because active developer directory is `/Library/Developer/CommandLineTools`; `xcodebuild` requires Xcode.
+
+Known issue:
+- Native macOS/watchOS target creation and app/widget compiler verification still require full Xcode.app.

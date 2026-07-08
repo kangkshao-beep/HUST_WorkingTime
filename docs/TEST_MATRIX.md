@@ -13,10 +13,10 @@
 | 9. Duplicate same-day record | Two records same dayKey | Calculate month | Counts one canonical record | Core passed via `AttendanceKitChecks` | Pending app run |
 | 10. iPhone offline -> later sync | Device offline | Clock in, later online | Local works, CloudKit catches up | Not run: device required | Pending |
 | 11. Watch offline -> later sync | Watch offline | Clock in on watch | Local-first update, queued sync | Sync protocol mock passed via `AttendanceKitChecks`; watch app not implemented | Pending app run |
-| 12. Mac receives CloudKit update | Mac signed in | Sync iPhone record | Mac app shows same record | Not implemented yet | Pending |
+| 12. Mac receives CloudKit update | Mac signed in | Sync iPhone record | Mac app shows same record | Shared app shell source prepared; native macOS target not created | Pending |
 | 13. iPhone widget before/after punch | Widget added | Clock in | Snapshot updates widget state | Timeline core passed via `AttendanceKitChecks`; widget runtime pending Xcode | Pending |
-| 14. Mac desktop widget | Mac target configured | Add widget | Shows same rules from local snapshot | Not implemented yet | Pending |
-| 15. Watch complication | Watch target configured | Add complication | Shows active countdown/status | Not implemented yet | Pending |
+| 14. Mac desktop widget | Mac target configured | Add widget | Shows same rules from local snapshot | Shared snapshot/timeline rules exist; native macOS widget target not created | Pending |
+| 15. Watch complication | Watch target configured | Add complication | Shows active countdown/status | Shared compact dashboard and sync protocol exist; watch target/complication not created | Pending |
 
 ## Verification Commands
 
