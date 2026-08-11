@@ -27,6 +27,11 @@ public class SharedModelContainer {
     }
 
     private static func createModelContainer() -> (container: ModelContainer, errorDescription: String?) {
+        #if os(macOS) || os(watchOS)
+        let schema = Schema([
+            AttendanceStorageRecord.self
+        ])
+        #else
         let schema = Schema([
             ClockEntry.self,
             Break.self,
@@ -36,10 +41,17 @@ public class SharedModelContainer {
             BreakWindow.self,
             AttendanceStorageRecord.self
         ])
+        #endif
 
-        if FileManager.default.containerURL(
+        let hasAppGroupConfiguration =
+            Bundle.main.object(forInfoDictionaryKey: "AttendanceAppGroupEnabled") as? Bool == true
+        let hasCloudKitConfiguration =
+            Bundle.main.object(forInfoDictionaryKey: "AttendanceCloudKitEnabled") as? Bool == true
+        let hasAppGroupContainer = hasAppGroupConfiguration && FileManager.default.containerURL(
             forSecurityApplicationGroupIdentifier: appGroupIdentifier
-        ) != nil {
+        ) != nil
+
+        if hasAppGroupContainer && hasCloudKitConfiguration {
             let appGroupConfiguration = ModelConfiguration(
                 schema: schema,
                 groupContainer: .identifier(appGroupIdentifier),
@@ -61,11 +73,54 @@ public class SharedModelContainer {
             }
         }
 
-        let missingAppGroupMessage =
-            "App Group 容器不可用，已切换到本机本地存储。请检查签名与 " +
-            "\(appGroupIdentifier) entitlement。"
+        if hasAppGroupContainer {
+            let appGroupOnlyConfiguration = ModelConfiguration(
+                schema: schema,
+                groupContainer: .identifier(appGroupIdentifier),
+                cloudKitDatabase: .none
+            )
+            let missingCloudKitMessage =
+                "CloudKit entitlement 不可用，当前使用 App Group 本地存储。请检查 " +
+                "\(cloudKitContainerIdentifier) 配置。"
+
+            do {
+                return (
+                    try ModelContainer(for: schema, configurations: [appGroupOnlyConfiguration]),
+                    missingCloudKitMessage
+                )
+            } catch {
+                let appGroupError = error.localizedDescription
+                log("App Group SwiftData container failed: \(appGroupError)", prefix: "persistence")
+                return createLocalModelContainer(
+                    schema: schema,
+                    fallbackReason: missingCloudKitMessage + " \(appGroupError)"
+                )
+            }
+        }
+
+        let missingAppGroupMessage = missingAppGroupFallbackMessage(
+            hasConfiguration: hasAppGroupConfiguration,
+            hasCloudKitConfiguration: hasCloudKitConfiguration
+        )
         log(missingAppGroupMessage, prefix: "persistence")
         return createLocalModelContainer(schema: schema, fallbackReason: missingAppGroupMessage)
+    }
+
+    private static func missingAppGroupFallbackMessage(
+        hasConfiguration: Bool,
+        hasCloudKitConfiguration: Bool
+    ) -> String {
+        var missingCapabilities: [String] = []
+        if !hasConfiguration {
+            missingCapabilities.append("App Group 配置")
+        } else {
+            missingCapabilities.append("App Group 容器")
+        }
+        if !hasCloudKitConfiguration {
+            missingCapabilities.append("CloudKit 配置")
+        }
+
+        return "\(missingCapabilities.joined(separator: "、")) 不可用，已切换到本机本地存储。"
     }
 
     private static func createLocalModelContainer(

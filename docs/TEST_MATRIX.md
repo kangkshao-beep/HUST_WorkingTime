@@ -13,7 +13,7 @@
 | 9. Duplicate same-day record | Two records same dayKey | Calculate month | Counts one canonical record | Core XCTest passed | Pass core |
 | 10. iPhone offline -> later sync | Device offline | Clock in, later online | Local works, CloudKit catches up | Not run: device required | Pending |
 | 11. Watch offline -> later sync | Watch offline | Clock in on watch | Local-first update, queued sync | Sync protocol XCTest passed; watch app not implemented | Pending app run |
-| 12. Mac receives CloudKit update | Mac signed in | Sync iPhone record | Mac app shows same record | Shared app shell source prepared; native macOS target not created | Pending |
+| 12. Mac receives CloudKit update | Mac signed in | Sync iPhone record | Mac app shows same record | Native Mac app builds and runs with local fallback; signed CloudKit sync not run | Pending sync |
 | 13. iPhone widget before/after punch | Widget added | Clock in | Snapshot updates widget state | Timeline XCTest passed; widget extension builds for iOS simulator and generic iOS device | Pending widget UI |
 | 14. Mac desktop widget | Mac target configured | Add widget | Shows same rules from local snapshot | Shared snapshot/timeline rules exist; native macOS widget target not created | Pending |
 | 15. Watch complication | Watch target configured | Add complication | Shows active countdown/status | Shared compact dashboard and sync protocol exist; watch target/complication not created | Pending |
@@ -33,4 +33,6 @@
 | `xcodebuild -project WorkingHour.xcodeproj -scheme "Ushio" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedDataUshio CODE_SIGNING_ALLOWED=NO build` | Pass | Widget scheme build passes. |
 | `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphoneos -destination "generic/platform=iOS" -derivedDataPath /private/tmp/WorkingHourDerivedDataDevice CODE_SIGNING_ALLOWED=NO build` | Pass | Generic iOS device build passes with signing disabled. |
 | `xcrun simctl install F6040390-A952-4322-B4EE-EC3FD2E3387A "/private/tmp/WorkingHourDerivedData/Build/Products/Debug-iphonesimulator/Working Hour.app"` | Pass | App installs on iPhone 17 Pro simulator. |
-| `xcrun simctl launch F6040390-A952-4322-B4EE-EC3FD2E3387A com.tsubuzaki.WorkingHour` | Pass after fallback fix | Launch returned stable pid 73466, and a simulator screenshot confirmed the Today screen rendered. |
+| `xcrun simctl launch F6040390-A952-4322-B4EE-EC3FD2E3387A com.tsubuzaki.WorkingHour` | Pass after fallback fix | Latest build returned stable pid 78133; the Today screen was previously screenshot-verified. |
+| `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Mac" -configuration Debug -destination "platform=macOS" -derivedDataPath /private/tmp/WorkingHourMacDerivedData CODE_SIGNING_ALLOWED=NO build` | Pass | Native Mac app and shared attendance layer compile for macOS. |
+| `pgrep -x "Working Hour Mac"` | Pass | Process remained active as pid 77613 after launch; shared dashboard rendered with the expected local-storage warning. |

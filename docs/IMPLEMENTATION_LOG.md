@@ -332,3 +332,47 @@ Result:
 
 Known issue:
 - Signed App Group persistence, real CloudKit sync, widget snapshot sharing, and the complete clock-in/edit/relaunch UI workflows still require manual verification.
+
+
+## 2026-08-11 - Native macOS App Target
+
+Modified files:
+- `Shared/Managers/ModelConfiguration.swift`
+- `Ushio/Info.plist`
+- `WorkingHour/Info.plist`
+- `WorkingHourMac/WorkingHourMacApp.swift`
+- `WorkingHour.xcodeproj/project.pbxproj`
+- `WorkingHour.xcodeproj/xcshareddata/xcschemes/Working Hour Mac.xcscheme`
+- `docs/ARCHITECTURE.md`
+- `docs/BASELINE_AUDIT.md`
+- `docs/IMPLEMENTATION_LOG.md`
+- `docs/MANUAL_SETUP.md`
+- `docs/TEST_MATRIX.md`
+
+Changes:
+- Added the native `Working Hour Mac` application target and shared scheme.
+- Reused the shared regular dashboard, attendance store, SwiftData storage model, snapshot store, and `AttendanceKit` instead of duplicating attendance rules.
+- Limited the Mac SwiftData schema to `AttendanceStorageRecord` so legacy iOS-only models and services are not target dependencies.
+- Added explicit `AttendanceAppGroupEnabled` and `AttendanceCloudKitEnabled` target capability flags. The iPhone app enables both and the widget enables App Group only; the unsigned Mac smoke build safely uses local storage.
+- Added a non-blocking Mac warning banner for missing App Group/CloudKit setup.
+
+Validation commands:
+- `xcodebuild -list -project WorkingHour.xcodeproj`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Mac" -configuration Debug -destination "platform=macOS" -derivedDataPath /private/tmp/WorkingHourMacDerivedData CODE_SIGNING_ALLOWED=NO build`
+- `open "/private/tmp/WorkingHourMacDerivedData/Build/Products/Debug/Working Hour Mac.app"`
+- `pgrep -x "Working Hour Mac"`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedDataEntitlement CODE_SIGNING_ALLOWED=NO build`
+- `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-mac-target-test`
+- `plutil -lint WorkingHour.xcodeproj/project.pbxproj WorkingHour/Info.plist Ushio/Info.plist`
+- `xmllint --noout "WorkingHour.xcodeproj/xcshareddata/xcschemes/Working Hour Mac.xcscheme"`
+
+Result:
+- Passed. Xcode lists `Working Hour Mac` as a target and shared scheme.
+- Passed. Native Mac and iOS app/widget builds succeed.
+- Passed. The Mac process remained active as pid 77613 and rendered the shared dashboard after the CloudKit entitlement crash was fixed.
+- Passed. The updated iOS build retained pid 78133 across a second launch query.
+- Passed. `AttendanceKitTests` executed 30 XCTest cases with 0 failures.
+
+Known issue:
+- The Mac target still needs owner-controlled signing capabilities before App Group/CloudKit sync can be tested.
+- A macOS widget and native watchOS app/widget targets remain pending.

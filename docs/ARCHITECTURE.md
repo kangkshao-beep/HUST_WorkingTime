@@ -5,7 +5,7 @@
 ```mermaid
 flowchart TD
     A[iPhone app] --> B[SwiftData local store]
-    C[Future macOS app] --> B
+    C[macOS app] --> B
     D[Future watchOS app] --> B
     B --> E[CloudKit durable sync]
     A <--> F[Future WatchConnectivity fast sync]
@@ -54,11 +54,15 @@ The old timesheet/project/break/geofencing code remains in the repository as leg
 
 `SharedModelContainer` now tries:
 
-1. App Group availability preflight, followed by the App Group SwiftData store.
+1. Target capability flags and App Group availability preflight, followed by the App Group SwiftData store.
 2. Local SwiftData store fallback.
 3. In-memory fallback.
 
-The preflight prevents SwiftData from entering its non-throwing fatal path when the App Group entitlement is unavailable, such as an unsigned simulator build. The first two failure states are non-fatal and exposed in Settings.
+`AttendanceAppGroupEnabled` and `AttendanceCloudKitEnabled` declare which capabilities each target has configured. The iPhone app enables both; the widget enables App Group only; unsigned or not-yet-configured Mac builds enable neither. Combined with the App Group URL preflight, this prevents SwiftData from entering non-throwing fatal paths for missing App Group or CloudKit entitlements. The first two failure states are non-fatal and exposed in the UI.
+
+## macOS App
+
+The native `Working Hour Mac` target embeds `AttendanceDashboardView(displayStyle: .regular)` and uses the same `AttendanceStore`, `AttendanceStorageRecord`, snapshot store, model container, and `AttendanceKit` package as iOS. Its schema intentionally includes only the new attendance model, so legacy iOS timesheet, geofencing, and Live Activity models are not pulled into the Mac target.
 
 ## Widget Snapshot
 
@@ -66,4 +70,4 @@ The app writes `AttendanceWidgetSnapshot` JSON into the App Group container. The
 
 ## Remaining Target Work
 
-Native macOS and watchOS targets still require Xcode project changes and compiler verification. Xcode 26.6 is installed and selected, and the iOS app/widget now build and launch on the available iOS 26.5 simulator. The shared attendance store and dashboard source are prepared for future native macOS/watchOS targets.
+The native macOS app target now builds and runs on macOS 26.5.2. Mac App Group/CloudKit signing, a macOS widget, the watchOS app, and the watchOS widget/complication remain pending. The shared attendance store and compact dashboard source are prepared for the watchOS target.

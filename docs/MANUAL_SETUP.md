@@ -66,9 +66,21 @@ Required capabilities:
 
 Widgets read local App Group snapshots. They should not rely on live CloudKit/network queries.
 
-## Future macOS Targets
+## macOS App Target
 
-Native macOS app and desktop widget should use:
+Target: `Working Hour Mac`
+
+Current status:
+- Builds with Xcode 26.6 for macOS 14.0 or newer.
+- Launches and renders the shared attendance dashboard on macOS 26.5.2.
+- Uses local SwiftData and shows a non-blocking warning until App Group/CloudKit are configured.
+
+To enable durable cross-device sync, add the owner-controlled App Group and iCloud/CloudKit capabilities to this target, then set these generated Info.plist build settings to `YES`:
+
+- `INFOPLIST_KEY_AttendanceAppGroupEnabled`
+- `INFOPLIST_KEY_AttendanceCloudKitEnabled`
+
+The native macOS app and future desktop widget should use:
 - Same CloudKit container for durable sync.
 - Mac-local App Group for app-to-widget snapshots.
 - `Shared/Attendance/AttendanceDashboardView(displayStyle: .regular)` as the app root content.

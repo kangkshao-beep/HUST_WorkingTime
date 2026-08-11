@@ -43,6 +43,7 @@ Branch at audit start: not a git repository. A baseline repository was initializ
 - Shared schemes on disk: `Working Hour`, `Ushio`
 - Native targets found in `project.pbxproj`:
   - `Working Hour`: iOS application, bundle id `com.tsubuzaki.WorkingHour`, iOS deployment target `18.0`.
+  - `Working Hour Mac`: macOS application, bundle id `com.tsubuzaki.WorkingHour.mac`, macOS deployment target `14.0`.
   - `Ushio`: Widget extension, bundle id `com.tsubuzaki.WorkingHour.Ushio`, iOS deployment target `26.0`.
 - Existing signing/team values are present in the project and are preserved.
 
@@ -112,4 +113,4 @@ After adding an App Group availability preflight on 2026-08-11, the same unsigne
 
 - Existing deployment targets are higher than the requested minimums; lowering requires Xcode verification.
 - Current App Group/iCloud identifiers use the upstream author namespace and must be replaced manually by the project owner.
-- Native macOS/watchOS target creation remains future work; iOS app/widget build verification is now available on this machine.
+- The native macOS app target is implemented and runtime-verified. macOS widget and watchOS target creation remain future work.

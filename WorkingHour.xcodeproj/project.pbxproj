@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		A10000000000000000000001 /* AttendanceKit in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000003 /* AttendanceKit */; };
 		A10000000000000000000002 /* AttendanceKit in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000003 /* AttendanceKit */; };
+		B20000000000000000000001 /* AttendanceKit in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000003 /* AttendanceKit */; };
+		B20000000000000000000002 /* ModelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000011 /* ModelConfiguration.swift */; };
+		B20000000000000000000003 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000012 /* Logger.swift */; };
+		B20000000000000000000004 /* AttendanceStorageRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000013 /* AttendanceStorageRecord.swift */; };
+		B20000000000000000000005 /* AttendanceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000014 /* AttendanceStore.swift */; };
+		B20000000000000000000006 /* AttendanceDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000015 /* AttendanceDashboardView.swift */; };
+		B20000000000000000000007 /* WidgetSnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000016 /* WidgetSnapshotStore.swift */; };
 		E4260F9A2CB975F30078946D /* Komponents in Frameworks */ = {isa = PBXBuildFile; productRef = E4260F992CB975F30078946D /* Komponents */; };
 		E4260FB52CBAB8C20078946D /* xlsxwriter in Frameworks */ = {isa = PBXBuildFile; productRef = E4260FB42CBAB8C20078946D /* xlsxwriter */; };
 		E44D37EA2D06EF5F006C9F1F /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E44D37E92D06EF5E006C9F1F /* WidgetKit.framework */; };
@@ -41,6 +48,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B20000000000000000000010 /* Working Hour Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Working Hour Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B20000000000000000000011 /* ModelConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/Managers/ModelConfiguration.swift; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000012 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/Logger.swift; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000013 /* AttendanceStorageRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/Attendance/AttendanceStorageRecord.swift; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000014 /* AttendanceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/Attendance/AttendanceStore.swift; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000015 /* AttendanceDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/Attendance/AttendanceDashboardView.swift; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000016 /* WidgetSnapshotStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/WidgetSupport/WidgetSnapshotStore.swift; sourceTree = SOURCE_ROOT; };
 		E4260F782CB6B0EA0078946D /* Working Hour.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Working Hour.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E44D37E72D06EF5E006C9F1F /* Ushio.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Ushio.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E44D37E92D06EF5E006C9F1F /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -73,6 +87,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		B20000000000000000000020 /* WorkingHourMac */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = WorkingHourMac;
+			sourceTree = "<group>";
+		};
 		E4C25B742F373EBE00F3BADF /* Shared */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Shared;
@@ -98,6 +117,14 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B20000000000000000000030 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B20000000000000000000001 /* AttendanceKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E4260F752CB6B0EA0078946D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -125,7 +152,9 @@
 			isa = PBXGroup;
 			children = (
 				E4C25B742F373EBE00F3BADF /* Shared */,
+				B20000000000000000000021 /* Shared Attendance Sources */,
 				E4C25BD12F373EE800F3BADF /* WorkingHour */,
+				B20000000000000000000020 /* WorkingHourMac */,
 				E4C25B892F373EC700F3BADF /* Ushio */,
 				E44D37E82D06EF5E006C9F1F /* Frameworks */,
 				E4260F792CB6B0EA0078946D /* Products */,
@@ -136,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				E4260F782CB6B0EA0078946D /* Working Hour.app */,
+				B20000000000000000000010 /* Working Hour Mac.app */,
 				E44D37E72D06EF5E006C9F1F /* Ushio.appex */,
 			);
 			name = Products;
@@ -150,9 +180,45 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		B20000000000000000000021 /* Shared Attendance Sources */ = {
+			isa = PBXGroup;
+			children = (
+				B20000000000000000000011 /* ModelConfiguration.swift */,
+				B20000000000000000000012 /* Logger.swift */,
+				B20000000000000000000013 /* AttendanceStorageRecord.swift */,
+				B20000000000000000000014 /* AttendanceStore.swift */,
+				B20000000000000000000015 /* AttendanceDashboardView.swift */,
+				B20000000000000000000016 /* WidgetSnapshotStore.swift */,
+			);
+			name = "Shared Attendance Sources";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		B20000000000000000000040 /* Working Hour Mac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B20000000000000000000052 /* Build configuration list for PBXNativeTarget "Working Hour Mac" */;
+			buildPhases = (
+				B20000000000000000000031 /* Sources */,
+				B20000000000000000000030 /* Frameworks */,
+				B20000000000000000000032 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B20000000000000000000020 /* WorkingHourMac */,
+			);
+			name = "Working Hour Mac";
+			packageProductDependencies = (
+				A10000000000000000000003 /* AttendanceKit */,
+			);
+			productName = WorkingHourMac;
+			productReference = B20000000000000000000010 /* Working Hour Mac.app */;
+			productType = "com.apple.product-type.application";
+		};
 		E4260F772CB6B0EA0078946D /* Working Hour */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E4260F892CB6B0EB0078946D /* Build configuration list for PBXNativeTarget "Working Hour" */;
@@ -216,6 +282,9 @@
 				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
+					B20000000000000000000040 = {
+						CreatedOnToolsVersion = 26.6;
+					};
 					E4260F772CB6B0EA0078946D = {
 						CreatedOnToolsVersion = 16.0;
 					};
@@ -245,12 +314,20 @@
 			projectRoot = "";
 			targets = (
 				E4260F772CB6B0EA0078946D /* Working Hour */,
+				B20000000000000000000040 /* Working Hour Mac */,
 				E44D37E62D06EF5E006C9F1F /* Ushio */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B20000000000000000000032 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E4260F762CB6B0EA0078946D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -289,6 +366,19 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B20000000000000000000031 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B20000000000000000000002 /* ModelConfiguration.swift in Sources */,
+				B20000000000000000000003 /* Logger.swift in Sources */,
+				B20000000000000000000004 /* AttendanceStorageRecord.swift in Sources */,
+				B20000000000000000000005 /* AttendanceStore.swift in Sources */,
+				B20000000000000000000006 /* AttendanceDashboardView.swift in Sources */,
+				B20000000000000000000007 /* WidgetSnapshotStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E4260F742CB6B0EA0078946D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -314,6 +404,58 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		B20000000000000000000050 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Working Hour";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsubuzaki.WorkingHour.mac;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B20000000000000000000051 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Working Hour";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsubuzaki.WorkingHour.mac;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		E4260F8A2CB6B0EB0078946D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -578,6 +720,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B20000000000000000000052 /* Build configuration list for PBXNativeTarget "Working Hour Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B20000000000000000000050 /* Debug */,
+				B20000000000000000000051 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		E4260F732CB6B0EA0078946D /* Build configuration list for PBXProject "WorkingHour" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
