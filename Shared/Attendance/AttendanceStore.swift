@@ -49,7 +49,7 @@ final class AttendanceStore {
             lastErrorMessage = nil
         } catch {
             records = []
-            lastErrorMessage = "无法读取打卡记录：\(error.localizedDescription)"
+            lastErrorMessage = String(localized: "无法读取打卡记录：\(error.localizedDescription)")
             log(lastErrorMessage ?? "Attendance load failed", prefix: "persistence")
         }
     }
@@ -112,7 +112,7 @@ final class AttendanceStore {
         sourceDevice: String
     ) -> Bool {
         guard clockInAt <= Date() else {
-            lastErrorMessage = "打卡时间不能晚于当前时间。"
+            lastErrorMessage = String(localized: "打卡时间不能晚于当前时间。")
             return false
         }
         let now = Date()
@@ -131,11 +131,11 @@ final class AttendanceStore {
 
     func update(record: AttendanceRecord, clockInAt: Date, actualClockOutAt: Date?) {
         guard clockInAt <= Date() else {
-            lastErrorMessage = "打卡时间不能晚于当前时间。"
+            lastErrorMessage = String(localized: "打卡时间不能晚于当前时间。")
             return
         }
         if let actualClockOutAt, actualClockOutAt < clockInAt {
-            lastErrorMessage = "下班时间不能早于上班时间。"
+            lastErrorMessage = String(localized: "下班时间不能早于上班时间。")
             return
         }
         record.clockInAt = clockInAt
@@ -173,7 +173,7 @@ final class AttendanceStore {
             load()
             refreshSnapshotAndWidgets()
         } catch {
-            lastErrorMessage = "删除失败：\(error.localizedDescription)"
+            lastErrorMessage = String(localized: "删除失败：\(error.localizedDescription)")
             log(lastErrorMessage ?? "Attendance delete failed", prefix: "persistence")
         }
     }
@@ -191,7 +191,7 @@ final class AttendanceStore {
             )
             #endif
         } catch {
-            lastErrorMessage = "Widget 快照更新失败：\(error.localizedDescription)"
+            lastErrorMessage = String(localized: "Widget 快照更新失败：\(error.localizedDescription)")
             log(lastErrorMessage ?? "Snapshot write failed", prefix: "widget")
         }
     }
@@ -206,7 +206,7 @@ final class AttendanceStore {
             clockIn(at: date, isManual: false, sourceDevice: "Apple Watch")
         case .clockOut(let date, _):
             guard let record = todayRecord(now: date) else {
-                lastErrorMessage = "未找到 Watch 下班命令对应的打卡记录。"
+                lastErrorMessage = String(localized: "未找到 Watch 下班命令对应的打卡记录。")
                 return
             }
             clockOut(record: record, at: date)
@@ -249,7 +249,7 @@ final class AttendanceStore {
             load()
             refreshSnapshotAndWidgets()
         } catch {
-            lastErrorMessage = "Watch 快照合并失败：\(error.localizedDescription)"
+            lastErrorMessage = String(localized: "Watch 快照合并失败：\(error.localizedDescription)")
             log(lastErrorMessage ?? "Watch snapshot merge failed", prefix: "watch-sync")
         }
     }
@@ -276,7 +276,7 @@ final class AttendanceStore {
             refreshSnapshotAndWidgets()
             return true
         } catch {
-            lastErrorMessage = "保存失败：\(error.localizedDescription)"
+            lastErrorMessage = String(localized: "保存失败：\(error.localizedDescription)")
             log(lastErrorMessage ?? "Attendance upsert failed", prefix: "persistence")
             return false
         }
@@ -313,7 +313,7 @@ final class AttendanceStore {
             WidgetCenter.shared.reloadAllTimelines()
             #endif
         } catch {
-            lastErrorMessage = "Watch 快照写入失败：\(error.localizedDescription)"
+            lastErrorMessage = String(localized: "Watch 快照写入失败：\(error.localizedDescription)")
             log(lastErrorMessage ?? "Watch snapshot write failed", prefix: "watch-sync")
         }
     }
@@ -323,8 +323,8 @@ final class AttendanceStore {
         let progress = monthProgress(containing: now, now: now)
         let status = status(for: today, now: now)
         let monthFormatter = DateFormatter()
-        monthFormatter.locale = Locale(identifier: "zh_Hans_CN")
-        monthFormatter.dateFormat = "yyyy年M月"
+        monthFormatter.locale = .autoupdatingCurrent
+        monthFormatter.setLocalizedDateFormatFromTemplate("yMMMM")
         let targetEndAt = today?.targetEndAt
 
         return AttendanceWidgetSnapshot(

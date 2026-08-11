@@ -67,7 +67,6 @@ private struct AttendanceDashboardTodayCard: View {
             Text(now, format: .dateTime.year().month().day().weekday(.wide))
                 .font(.headline)
                 .foregroundStyle(.secondary)
-                .environment(\.locale, Locale(identifier: "zh_CN"))
 
             switch status {
             case .weekend:
@@ -171,7 +170,7 @@ private struct AttendanceDashboardMonthCard: View {
                 Text("本月达标进度")
                     .font(.headline)
                 Spacer()
-                Text(progress.passed ? "已达标" : "未达标")
+                Text(progress.passed ? String(localized: "已达标") : String(localized: "未达标"))
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(progress.passed ? .green : .orange)
             }

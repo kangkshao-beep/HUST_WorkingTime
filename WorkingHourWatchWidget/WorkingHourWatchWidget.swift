@@ -16,8 +16,8 @@ struct WorkingHourWatchWidget: Widget {
             HomeWidgetView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
         }
-        .configurationDisplayName("打卡倒计时")
-        .description("显示今天的打卡状态与本月进度。")
+        .configurationDisplayName(String(localized: "打卡倒计时", table: "Widget"))
+        .description(String(localized: "显示今天的打卡状态与本月进度。", table: "Widget"))
         .supportedFamilies([.accessoryInline, .accessoryCircular, .accessoryRectangular])
     }
 }

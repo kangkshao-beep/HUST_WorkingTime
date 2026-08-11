@@ -45,7 +45,7 @@ struct AttendancePanel<Content: View>: View {
 }
 
 struct AttendanceTipBanner: View {
-    let text: String
+    let text: LocalizedStringKey
 
     var body: some View {
         AttendancePanel {

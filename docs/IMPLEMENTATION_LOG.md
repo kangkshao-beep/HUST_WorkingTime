@@ -506,3 +506,24 @@ Result:
 
 Known issue:
 - Simulator builds validate both sides of the adapter, but actual reachable/background WatchConnectivity delivery still requires a paired physical iPhone and Apple Watch.
+
+
+## 2026-08-11 - Hong Kong Chinese Localization
+
+Modified areas:
+- Added `zh-HK` to the project regions and localized the active attendance experience on iPhone, Mac, Watch, and their widgets.
+- Added dedicated Widget string tables so app and extension catalogs no longer produce duplicate outputs.
+- Removed forced Simplified Chinese locales and allowed date/time formatting to follow the user's current Hong Kong locale.
+- Localized runtime storage, validation, and synchronization errors that are passed through `String` values.
+- Disabled generated String Catalog symbols for the iPhone app and Ushio targets because legacy punctuation keys cannot produce unique Swift identifiers.
+
+Validation:
+- `Working Hour`, `Working Hour Mac`, and `Working Hour Watch` Debug builds passed with signing disabled.
+- Built products contain `zh-HK.lproj/Localizable.strings` and the expected `zh-HK.lproj/Widget.strings` resources.
+- The Mac app was launched with `-AppleLanguages (zh-HK) -AppleLocale zh_HK`; navigation, dates, attendance status, and local-storage warning rendered in Hong Kong Traditional Chinese.
+- `swift test --package-path Packages/AttendanceKit` executed 32 XCTest cases with 0 failures.
+- Project plist, `.strings`, `.xcstrings`, and Git whitespace checks passed.
+
+Coverage note:
+- All 131 strings used by the current iPhone attendance flow and all 20 Ushio widget strings have `zh-HK` translations.
+- The catalog still retains 184 untranslated keys from legacy timesheet, project, export, and geofencing screens that are no longer reachable from the current main navigation.

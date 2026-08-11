@@ -14,11 +14,14 @@ struct StartWorkSessionControl: ControlWidget {
             kind: "com.tsubuzaki.WorkingHour.Ushio.Start"
         ) {
             ControlWidgetButton(action: StartWorkSessionIntent()) {
-                Label("TimeClock.Work.ClockIn", systemImage: "figure.walk.arrival")
+                Label(
+                    String(localized: "TimeClock.Work.ClockIn", table: "Widget"),
+                    systemImage: "figure.walk.arrival"
+                )
             }
         }
-        .displayName("TimeClock.Work.ClockIn")
-        .description("TimeClock.Work.StartSession")
+        .displayName(LocalizedStringResource("TimeClock.Work.ClockIn", table: "Widget"))
+        .description(LocalizedStringResource("TimeClock.Work.StartSession", table: "Widget"))
     }
 }
 
@@ -28,10 +31,13 @@ struct EndWorkSessionControl: ControlWidget {
             kind: "com.tsubuzaki.WorkingHour.Ushio.End"
         ) {
             ControlWidgetButton(action: EndWorkSessionIntent()) {
-                Label("TimeClock.Work.ClockOut", systemImage: "figure.walk.departure")
+                Label(
+                    String(localized: "TimeClock.Work.ClockOut", table: "Widget"),
+                    systemImage: "figure.walk.departure"
+                )
             }
         }
-        .displayName("TimeClock.Work.ClockOut")
-        .description("TimeClock.Work.ClockOutSession")
+        .displayName(LocalizedStringResource("TimeClock.Work.ClockOut", table: "Widget"))
+        .description(LocalizedStringResource("TimeClock.Work.ClockOutSession", table: "Widget"))
     }
 }

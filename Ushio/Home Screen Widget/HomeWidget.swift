@@ -16,8 +16,8 @@ struct UshioHomeWidget: Widget {
             HomeWidgetView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
         }
-        .configurationDisplayName("Widget.DisplayName")
-        .description("Widget.Description")
+        .configurationDisplayName(String(localized: "Widget.DisplayName", table: "Widget"))
+        .description(String(localized: "Widget.Description", table: "Widget"))
         .supportedFamilies([.systemSmall, .systemMedium, .accessoryInline, .accessoryCircular, .accessoryRectangular])
     }
 }

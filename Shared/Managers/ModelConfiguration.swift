@@ -62,9 +62,9 @@ public class SharedModelContainer {
                 return (try ModelContainer(for: schema, configurations: [appGroupConfiguration]), nil)
             } catch {
                 let appGroupError = error.localizedDescription
-                let fallbackReason =
-                    "CloudKit 或 App Group SwiftData 初始化失败，已切换到本机本地存储：" +
-                    appGroupError
+                let fallbackReason = String(
+                    localized: "CloudKit 或 App Group SwiftData 初始化失败，已切换到本机本地存储：\(appGroupError)"
+                )
                 log("CloudKit/App Group SwiftData container failed: \(appGroupError)", prefix: "persistence")
                 return createLocalModelContainer(
                     schema: schema,
@@ -79,9 +79,9 @@ public class SharedModelContainer {
                 groupContainer: .identifier(appGroupIdentifier),
                 cloudKitDatabase: .none
             )
-            let missingCloudKitMessage =
-                "CloudKit entitlement 不可用，当前使用 App Group 本地存储。请检查 " +
-                "\(cloudKitContainerIdentifier) 配置。"
+            let missingCloudKitMessage = String(
+                localized: "CloudKit entitlement 不可用，当前使用 App Group 本地存储。请检查 \(cloudKitContainerIdentifier) 配置。"
+            )
 
             do {
                 return (
@@ -112,15 +112,16 @@ public class SharedModelContainer {
     ) -> String {
         var missingCapabilities: [String] = []
         if !hasConfiguration {
-            missingCapabilities.append("App Group 配置")
+            missingCapabilities.append(String(localized: "App Group 配置"))
         } else {
-            missingCapabilities.append("App Group 容器")
+            missingCapabilities.append(String(localized: "App Group 容器"))
         }
         if !hasCloudKitConfiguration {
-            missingCapabilities.append("CloudKit 配置")
+            missingCapabilities.append(String(localized: "CloudKit 配置"))
         }
 
-        return "\(missingCapabilities.joined(separator: "、")) 不可用，已切换到本机本地存储。"
+        let capabilityList = missingCapabilities.joined(separator: String(localized: "、"))
+        return String(localized: "\(capabilityList) 不可用，已切换到本机本地存储。")
     }
 
     private static func createLocalModelContainer(
@@ -141,7 +142,7 @@ public class SharedModelContainer {
             do {
                 return (
                     try ModelContainer(for: schema, configurations: [inMemoryConfiguration]),
-                    "持久化存储初始化失败，当前仅使用内存存储：\(localError)"
+                    String(localized: "持久化存储初始化失败，当前仅使用内存存储：\(localError)")
                 )
             } catch {
                 preconditionFailure("Unable to create even an in-memory SwiftData container: \(error)")

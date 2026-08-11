@@ -16,6 +16,12 @@
             "state" : "translated",
             "value" : "タイムシート"
           }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "工時記錄"
+          }
         }
       }
     },
@@ -46,6 +52,12 @@
             "state" : "translated",
             "value" : "職場に到着した時や離れた時に自動的に出勤・退勤を記録するために位置情報を使用します。"
           }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Working Hour 會使用你的位置，在你抵達或離開工作地點時自動記錄上班及下班。"
+          }
         }
       }
     },
@@ -63,6 +75,12 @@
             "state" : "translated",
             "value" : "職場に到着した時や離れた時に自動的に出勤・退勤を記録するために位置情報を使用します。"
           }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Working Hour 會使用你的位置，在你抵達或離開工作地點時自動記錄上班及下班。"
+          }
         }
       }
     },
@@ -79,6 +97,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "自動出勤・退勤のための職場ジオフェンスを設定するために位置情報を使用します。"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Working Hour 會使用你的位置設定工作地點範圍，以自動記錄上班及下班。"
           }
         }
       }

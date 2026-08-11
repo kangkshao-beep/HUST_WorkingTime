@@ -32,7 +32,7 @@ struct HomeWidgetEntry: TimelineEntry {
                 totalWorkdays: 22,
                 remainingNeeded: 4,
                 monthPassed: false,
-                monthLabel: "本月",
+                monthLabel: String(localized: "本月", table: "Widget"),
                 nextRefreshAt: calendar.nextMeaningfulRefreshDate(now: now)
             )
         )
@@ -56,7 +56,7 @@ struct HomeWidgetEntry: TimelineEntry {
                 totalWorkdays: 0,
                 remainingNeeded: 0,
                 monthPassed: false,
-                monthLabel: "本月",
+                monthLabel: String(localized: "本月", table: "Widget"),
                 nextRefreshAt: calendar.nextMeaningfulRefreshDate(now: now)
             )
         )

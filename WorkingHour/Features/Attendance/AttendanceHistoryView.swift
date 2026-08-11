@@ -133,7 +133,7 @@ private struct AttendanceRecordEditor: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("保存") {
                         if hasClockOut && clockOutAt < clockInAt {
-                            message = "下班时间不能早于上班时间。"
+                            message = String(localized: "下班时间不能早于上班时间。")
                             return
                         }
                         store.update(record: record, clockInAt: clockInAt, actualClockOutAt: hasClockOut ? clockOutAt : nil)

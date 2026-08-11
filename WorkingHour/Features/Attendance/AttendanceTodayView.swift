@@ -65,7 +65,6 @@ private struct TodayStatusPanel: View {
                     Text(now, format: .dateTime.month().day().weekday(.wide))
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(AttendanceTheme.secondaryInk)
-                        .environment(\.locale, Locale(identifier: "zh_CN"))
                         .frame(maxWidth: .infinity)
 
                     switch status {
@@ -231,11 +230,11 @@ private struct AttendanceCountdownContent: View {
 }
 
 private struct StatusLabel: View {
-    let title: String
+    let title: LocalizedStringKey
     let icon: String
     let color: Color
 
-    init(_ title: String, icon: String, color: Color) {
+    init(_ title: LocalizedStringKey, icon: String, color: Color) {
         self.title = title
         self.icon = icon
         self.color = color
@@ -249,7 +248,7 @@ private struct StatusLabel: View {
 }
 
 private struct TimeLabel: View {
-    let title: String
+    let title: LocalizedStringKey
     let date: Date
     let icon: String
 
@@ -314,7 +313,7 @@ private struct TodayMetric: View {
     let icon: String
     let color: Color
     let value: String
-    let label: String
+    let label: LocalizedStringKey
 
     var body: some View {
         VStack(spacing: 7) {
@@ -381,7 +380,7 @@ private struct ManualClockInSheet: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("保存") {
                         guard selectedTime <= Date() else {
-                            validationMessage = "不能选择未来时间。"
+                            validationMessage = String(localized: "不能选择未来时间。")
                             return
                         }
                         if let existingRecord {

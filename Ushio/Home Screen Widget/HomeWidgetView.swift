@@ -40,7 +40,7 @@ struct HomeWidgetView: View {
             Spacer(minLength: 4)
 
             if entry.snapshot.status == .working, let targetEndAt = entry.snapshot.targetEndAt {
-                Text("距离下班")
+                Text(String(localized: "距离下班", table: "Widget"))
                     .font(.caption2)
                     .foregroundStyle(.secondary)
                 Text(targetEndAt, style: .timer)
@@ -55,7 +55,12 @@ struct HomeWidgetView: View {
 
             Spacer(minLength: 4)
 
-            Text("本月 \(entry.snapshot.validAttendanceDays)/\(entry.snapshot.requiredDays)")
+            Text(
+                String(
+                    localized: "本月 \(entry.snapshot.validAttendanceDays)/\(entry.snapshot.requiredDays)",
+                    table: "Widget"
+                )
+            )
                 .font(.caption2)
                 .foregroundStyle(.secondary)
         }
@@ -83,20 +88,25 @@ struct HomeWidgetView: View {
             Spacer()
             VStack(alignment: .trailing, spacing: 6) {
                 if let clockInAt = entry.snapshot.clockInAt {
-                    Text("上班")
+                    Text(String(localized: "上班", table: "Widget"))
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                     Text(clockInAt, style: .time)
                         .font(.headline)
                 }
                 if let targetEndAt = entry.snapshot.targetEndAt {
-                    Text("预计下班")
+                    Text(String(localized: "预计下班", table: "Widget"))
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                     Text(targetEndAt, style: .time)
                         .font(.headline)
                 }
-                Text("本月 \(entry.snapshot.validAttendanceDays)/\(entry.snapshot.requiredDays)")
+                Text(
+                    String(
+                        localized: "本月 \(entry.snapshot.validAttendanceDays)/\(entry.snapshot.requiredDays)",
+                        table: "Widget"
+                    )
+                )
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(entry.snapshot.monthPassed ? .green : .secondary)
             }
@@ -108,7 +118,12 @@ struct HomeWidgetView: View {
 
     private var inlineWidget: some View {
         if entry.snapshot.status == .working, let targetEndAt = entry.snapshot.targetEndAt {
-            Text("下班 \(targetEndAt.formatted(date: .omitted, time: .shortened))")
+            Text(
+                String(
+                    localized: "下班 \(targetEndAt.formatted(date: .omitted, time: .shortened))",
+                    table: "Widget"
+                )
+            )
         } else {
             Text(statusTitle)
         }
@@ -134,7 +149,12 @@ struct HomeWidgetView: View {
                     .font(.title3.weight(.bold))
                     .monospacedDigit()
             }
-            Text("本月 \(entry.snapshot.validAttendanceDays)/\(entry.snapshot.requiredDays)")
+            Text(
+                String(
+                    localized: "本月 \(entry.snapshot.validAttendanceDays)/\(entry.snapshot.requiredDays)",
+                    table: "Widget"
+                )
+            )
                 .font(.caption2)
         }
     }
@@ -143,17 +163,17 @@ struct HomeWidgetView: View {
     private var statusTitle: String {
         switch entry.snapshot.status {
         case .weekend:
-            return "今天休息"
+            return String(localized: "今天休息", table: "Widget")
         case .notClockedIn:
-            return "今天尚未打卡"
+            return String(localized: "今天尚未打卡", table: "Widget")
         case .working:
-            return "工作中"
+            return String(localized: "工作中", table: "Widget")
         case .targetReached:
-            return "8 小时完成"
+            return String(localized: "8 小时完成", table: "Widget")
         case .clockedOutEarly:
-            return "已提前结束"
+            return String(localized: "已提前结束", table: "Widget")
         case .completed:
-            return "今天已完成"
+            return String(localized: "今天已完成", table: "Widget")
         }
     }
 

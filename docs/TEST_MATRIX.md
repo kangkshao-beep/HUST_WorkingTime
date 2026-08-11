@@ -42,3 +42,6 @@
 | `xcrun simctl launch 1E19D673-DB89-4DEE-9894-9B86D4AA7C67 com.tsubuzaki.WorkingHour.watchkitapp` | Pass | Complete Watch bundle retained pid 88322 across a second launch query; screenshot verified the compact layout. |
 | `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Mac" -configuration Debug -destination "platform=macOS" ... build` | Pass | Mac host and embedded desktop WidgetKit extension compile successfully. |
 | `pgrep -fl "Working Hour Mac"` | Pass | Complete Mac bundle remained active as pid 6918 after ad-hoc signing and relaunch. |
+| `xcodebuild ... -scheme "Working Hour" ... /private/tmp/WorkingHourIOSZhHK ... build` | Pass | iPhone app and Ushio widget compile; both contain Hong Kong localization resources. |
+| `xcodebuild ... -scheme "Working Hour Mac" ... /private/tmp/WorkingHourMacZhHK ... build` | Pass | Mac host and desktop widget compile; runtime screenshot verified Hong Kong Traditional Chinese and Hong Kong date formatting. |
+| `xcodebuild ... -scheme "Working Hour Watch" ... /private/tmp/WorkingHourWatchZhHK ... build` | Pass | Watch app and complication compile with `zh-HK` app and widget resources. |

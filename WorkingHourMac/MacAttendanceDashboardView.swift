@@ -2,7 +2,9 @@ import AttendanceKit
 import SwiftData
 import SwiftUI
 
-private let macChineseLocale = Locale(identifier: "zh_CN")
+private func macLocalized(_ key: String) -> String {
+    NSLocalizedString(key, comment: "")
+}
 
 struct MacAttendanceDashboardView: View {
     @Environment(\.modelContext) private var modelContext
@@ -16,12 +18,12 @@ struct MacAttendanceDashboardView: View {
         NavigationSplitView {
             List(selection: $selection) {
                 Section("工作台") {
-                    MacSidebarItem(title: "今天", systemImage: "clock", value: .today)
-                    MacSidebarItem(title: "本月", systemImage: "calendar", value: .month)
+                    MacSidebarItem(title: macLocalized("今天"), systemImage: "clock", value: .today)
+                    MacSidebarItem(title: macLocalized("本月"), systemImage: "calendar", value: .month)
                 }
 
                 Section("数据") {
-                    MacSidebarItem(title: "打卡记录", systemImage: "list.bullet.rectangle", value: .history)
+                    MacSidebarItem(title: macLocalized("打卡记录"), systemImage: "list.bullet.rectangle", value: .history)
                 }
             }
             .navigationSplitViewColumnWidth(min: 170, ideal: 190, max: 220)
@@ -70,7 +72,6 @@ struct MacAttendanceDashboardView: View {
             }
         }
         .navigationTitle((selection ?? .today).title)
-        .environment(\.locale, Locale(identifier: "zh_CN"))
         .task {
             store.configure(modelContext: modelContext)
         }
@@ -87,9 +88,9 @@ private enum MacAttendanceSection: String, CaseIterable, Hashable {
 
     var title: String {
         switch self {
-        case .today: "今天"
-        case .month: "本月"
-        case .history: "打卡记录"
+        case .today: macLocalized("今天")
+        case .month: macLocalized("本月")
+        case .history: macLocalized("打卡记录")
         }
     }
 }
@@ -106,6 +107,8 @@ private struct MacSidebarItem: View {
 }
 
 private struct MacTodayView: View {
+    @Environment(\.locale) private var locale
+
     let store: AttendanceStore
     let now: Date
 
@@ -118,7 +121,7 @@ private struct MacTodayView: View {
             VStack(alignment: .leading, spacing: 0) {
                 MacPageHeader(
                     eyebrow: now.formatted(
-                        .dateTime.year().month().day().weekday(.wide).locale(macChineseLocale)
+                        .dateTime.year().month().day().weekday(.wide).locale(locale)
                     ),
                     title: greeting(for: status),
                     status: status
@@ -153,12 +156,12 @@ private struct MacTodayView: View {
 
     private func greeting(for status: AttendanceStatus) -> String {
         switch status {
-        case .weekend: "今天休息"
-        case .notClockedIn: "准备开始工作"
-        case .working: "工作进行中"
-        case .targetReached: "今日目标已完成"
-        case .clockedOutEarly: "今天已结束"
-        case .completed: "今天已完成"
+        case .weekend: macLocalized("今天休息")
+        case .notClockedIn: macLocalized("准备开始工作")
+        case .working: macLocalized("工作进行中")
+        case .targetReached: macLocalized("今日目标已完成")
+        case .clockedOutEarly: macLocalized("今天已结束")
+        case .completed: macLocalized("今天已完成")
         }
     }
 }
@@ -206,7 +209,7 @@ private struct MacTodayFocus: View {
                         .font(.system(size: 42, weight: .light))
                         .foregroundStyle(.secondary)
 
-                    Text(status == .weekend ? "没有安排" : "尚未打卡")
+                    Text(status == .weekend ? macLocalized("没有安排") : macLocalized("尚未打卡"))
                         .font(.system(size: 34, weight: .semibold))
 
                     if status == .notClockedIn {
@@ -226,9 +229,9 @@ private struct MacTodayFocus: View {
 
     private var primaryLabel: String {
         switch status {
-        case .working: "距离今日目标"
-        case .targetReached: "目标已达成"
-        case .clockedOutEarly, .completed: "今日工作时长"
+        case .working: macLocalized("距离今日目标")
+        case .targetReached: macLocalized("目标已达成")
+        case .clockedOutEarly, .completed: macLocalized("今日工作时长")
         case .weekend, .notClockedIn: ""
         }
     }
@@ -265,16 +268,18 @@ private struct MacTodayFocus: View {
 }
 
 private struct MacTimeStrip: View {
+    @Environment(\.locale) private var locale
+
     let record: AttendanceRecord
 
     var body: some View {
         HStack(spacing: 0) {
-            MacTimeMetric(title: "上班", value: time(record.clockInAt), systemImage: "arrow.right.circle")
+            MacTimeMetric(title: macLocalized("上班"), value: time(record.clockInAt), systemImage: "arrow.right.circle")
             Divider().frame(height: 42)
-            MacTimeMetric(title: "目标", value: targetTime, systemImage: "flag.checkered")
+            MacTimeMetric(title: macLocalized("目标"), value: targetTime, systemImage: "flag.checkered")
             Divider().frame(height: 42)
             MacTimeMetric(
-                title: "下班",
+                title: macLocalized("下班"),
                 value: record.actualClockOutAt.map(time) ?? "--:--",
                 systemImage: "stop.circle"
             )
@@ -285,13 +290,13 @@ private struct MacTimeStrip: View {
     }
 
     private func time(_ date: Date) -> String {
-        date.formatted(date: .omitted, time: .shortened)
+        date.formatted(.dateTime.hour().minute().locale(locale))
     }
 
     private var targetTime: String {
         let prefix = Calendar.current.isDate(record.clockInAt, inSameDayAs: record.targetEndAt)
             ? ""
-            : "次日 "
+            : macLocalized("次日 ")
         return prefix + time(record.targetEndAt)
     }
 }
@@ -316,6 +321,8 @@ private struct MacTimeMetric: View {
 }
 
 private struct MacMonthView: View {
+    @Environment(\.locale) private var locale
+
     let store: AttendanceStore
     let now: Date
 
@@ -325,9 +332,9 @@ private struct MacMonthView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
                 MacPageHeader(
-                    eyebrow: now.formatted(.dateTime.year().month(.wide).locale(macChineseLocale)),
-                    title: "本月出勤",
-                    statusText: progress.passed ? "已达标" : "进行中",
+                    eyebrow: now.formatted(.dateTime.year().month(.wide).locale(locale)),
+                    title: macLocalized("本月出勤"),
+                    statusText: progress.passed ? macLocalized("已达标") : macLocalized("进行中"),
                     statusColor: progress.passed ? .green : .secondary
                 )
 
@@ -344,13 +351,13 @@ private struct MacMonthView: View {
                     .tint(progress.passed ? .green : .accentColor)
 
                 HStack(spacing: 0) {
-                    MacMonthMetric(title: "当月工作日", value: "\(progress.totalWorkdays)")
+                    MacMonthMetric(title: macLocalized("当月工作日"), value: "\(progress.totalWorkdays)")
                     Divider().frame(height: 44)
-                    MacMonthMetric(title: "已经过", value: "\(progress.elapsedWorkdays)")
+                    MacMonthMetric(title: macLocalized("已经过"), value: "\(progress.elapsedWorkdays)")
                     Divider().frame(height: 44)
-                    MacMonthMetric(title: "缺勤", value: "\(progress.missedPastWorkdays)")
+                    MacMonthMetric(title: macLocalized("缺勤"), value: "\(progress.missedPastWorkdays)")
                     Divider().frame(height: 44)
-                    MacMonthMetric(title: "还需打卡", value: "\(progress.remainingNeeded)")
+                    MacMonthMetric(title: macLocalized("还需打卡"), value: "\(progress.remainingNeeded)")
                 }
                 .padding(.vertical, 16)
                 .background(.quaternary.opacity(0.45))
@@ -379,7 +386,7 @@ private struct MacMonthSummary: View {
                 Text("本月")
                     .font(.headline)
                 Spacer()
-                Text(progress.passed ? "已达标" : "进行中")
+                Text(progress.passed ? macLocalized("已达标") : macLocalized("进行中"))
                     .font(.caption)
                     .foregroundStyle(progress.passed ? .green : .secondary)
             }
@@ -443,9 +450,9 @@ private struct MacHistoryView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 MacPageHeader(
-                    eyebrow: "共 \(store.records.count) 条记录",
-                    title: "打卡记录",
-                    statusText: "自动同步",
+                    eyebrow: String(localized: "共 \(store.records.count) 条记录"),
+                    title: macLocalized("打卡记录"),
+                    statusText: macLocalized("自动同步"),
                     statusColor: .secondary
                 )
 
@@ -465,6 +472,8 @@ private struct MacHistoryView: View {
 }
 
 private struct MacRecordList: View {
+    @Environment(\.locale) private var locale
+
     let records: [AttendanceRecord]
     let store: AttendanceStore
 
@@ -475,7 +484,7 @@ private struct MacRecordList: View {
                     VStack(alignment: .leading, spacing: 3) {
                         Text(
                             record.clockInAt.formatted(
-                                .dateTime.month().day().weekday(.abbreviated).locale(macChineseLocale)
+                                .dateTime.month().day().weekday(.abbreviated).locale(locale)
                             )
                         )
                             .font(.body.weight(.medium))
@@ -497,7 +506,10 @@ private struct MacRecordList: View {
 
                     Spacer()
 
-                    Label(record.actualClockOutAt == nil ? "进行中" : "已结束", systemImage: record.actualClockOutAt == nil ? "circle.fill" : "checkmark.circle")
+                    Label(
+                        record.actualClockOutAt == nil ? macLocalized("进行中") : macLocalized("已结束"),
+                        systemImage: record.actualClockOutAt == nil ? "circle.fill" : "checkmark.circle"
+                    )
                         .font(.caption)
                         .foregroundStyle(record.actualClockOutAt == nil ? Color.accentColor : .secondary)
                 }
@@ -527,19 +539,19 @@ private struct MacPageHeader: View {
         self.title = title
         switch status {
         case .weekend:
-            statusText = "休息日"
+            statusText = macLocalized("休息日")
             statusColor = .secondary
         case .notClockedIn:
-            statusText = "未打卡"
+            statusText = macLocalized("未打卡")
             statusColor = .secondary
         case .working:
-            statusText = "计时中"
+            statusText = macLocalized("计时中")
             statusColor = .accentColor
         case .targetReached, .completed:
-            statusText = "已完成"
+            statusText = macLocalized("已完成")
             statusColor = .green
         case .clockedOutEarly:
-            statusText = "提前结束"
+            statusText = macLocalized("提前结束")
             statusColor = .orange
         }
     }

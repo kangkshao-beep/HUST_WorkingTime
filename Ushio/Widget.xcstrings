@@ -1,0 +1,206 @@
+{
+  "sourceLanguage" : "zh-Hans",
+  "strings" : {
+    "TimeClock.Work.ClockIn" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上班打卡"
+          }
+        }
+      }
+    },
+    "TimeClock.Work.ClockOut" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下班打卡"
+          }
+        }
+      }
+    },
+    "TimeClock.Work.ClockOutSession" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "結束目前的工作時段"
+          }
+        }
+      }
+    },
+    "TimeClock.Work.StartSession" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開始新的工作時段"
+          }
+        }
+      }
+    },
+    "Widget.Description" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顯示今日的打卡狀態及本月進度。"
+          }
+        }
+      }
+    },
+    "Widget.DisplayName" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打卡倒數"
+          }
+        }
+      }
+    },
+    "8 小时完成" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已完成 8 小時"
+          }
+        }
+      }
+    },
+    "上班" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上班"
+          }
+        }
+      }
+    },
+    "下班 %@" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下班 %@"
+          }
+        }
+      }
+    },
+    "今天休息" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日休息"
+          }
+        }
+      }
+    },
+    "今天尚未打卡" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日尚未打卡"
+          }
+        }
+      }
+    },
+    "今天已完成" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日已完成"
+          }
+        }
+      }
+    },
+    "工作中" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "工作中"
+          }
+        }
+      }
+    },
+    "已提前结束" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已提早結束"
+          }
+        }
+      }
+    },
+    "打卡倒计时" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打卡倒數"
+          }
+        }
+      }
+    },
+    "本月" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本月"
+          }
+        }
+      }
+    },
+    "显示今天的打卡状态与本月进度。" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顯示今日的打卡狀態及本月進度。"
+          }
+        }
+      }
+    },
+    "本月 %lld/%lld" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "本月 %1$lld/%2$lld"
+          }
+        }
+      }
+    },
+    "预计下班" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "預計下班"
+          }
+        }
+      }
+    },
+    "距离下班" : {
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "距離下班"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.1"
+}
