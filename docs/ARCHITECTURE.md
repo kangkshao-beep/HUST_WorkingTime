@@ -54,11 +54,11 @@ The old timesheet/project/break/geofencing code remains in the repository as leg
 
 `SharedModelContainer` now tries:
 
-1. App Group SwiftData store.
+1. App Group availability preflight, followed by the App Group SwiftData store.
 2. Local SwiftData store fallback.
 3. In-memory fallback.
 
-The first two failure states are non-fatal and exposed in Settings.
+The preflight prevents SwiftData from entering its non-throwing fatal path when the App Group entitlement is unavailable, such as an unsigned simulator build. The first two failure states are non-fatal and exposed in Settings.
 
 ## Widget Snapshot
 

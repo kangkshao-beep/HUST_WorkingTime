@@ -295,3 +295,40 @@ Result:
 
 Known issue:
 - Manual UI workflow checks, real CloudKit sync, physical-device signing, and native macOS/watchOS targets remain pending.
+
+
+## 2026-08-11 - Unsigned Simulator Persistence Fallback
+
+Modified files:
+- `Shared/Managers/ModelConfiguration.swift`
+- `docs/ARCHITECTURE.md`
+- `docs/BASELINE_AUDIT.md`
+- `docs/IMPLEMENTATION_LOG.md`
+- `docs/MANUAL_SETUP.md`
+- `docs/TEST_MATRIX.md`
+
+Cause:
+- The earlier unsigned simulator launch returned a PID but exited before rendering the app.
+- SwiftData called a non-throwing fatal path while constructing an App Group configuration without a usable `group.com.tsubuzaki.WorkingHour` entitlement, so the existing `do`/`catch` fallback could not run.
+
+Changes:
+- Added an App Group container availability preflight before constructing the App Group + CloudKit SwiftData configuration.
+- Reused one local-store helper for both a missing App Group and a thrown App Group/CloudKit initialization error.
+- Preserved the final in-memory fallback for environments where even the local persistent store is unavailable.
+
+Validation commands:
+- `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-model-fallback-test`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedDataFallback CODE_SIGNING_ALLOWED=NO build`
+- `xcrun simctl install F6040390-A952-4322-B4EE-EC3FD2E3387A "/private/tmp/WorkingHourDerivedDataFallback/Build/Products/Debug-iphonesimulator/Working Hour.app"`
+- `xcrun simctl launch F6040390-A952-4322-B4EE-EC3FD2E3387A com.tsubuzaki.WorkingHour`
+- `xcrun simctl io F6040390-A952-4322-B4EE-EC3FD2E3387A screenshot /private/tmp/working-hour-fallback-final.png`
+- `xcrun simctl spawn F6040390-A952-4322-B4EE-EC3FD2E3387A log show --last 2m --style compact --predicate 'process == "Working Hour"'`
+
+Result:
+- Passed. `AttendanceKitTests` executed 30 XCTest cases with 0 failures.
+- Passed. The iOS app and embedded widget compiled for the iOS simulator.
+- Passed. The app rendered the Today screen, and a second launch query returned the same pid 73466.
+- The log recorded the expected non-fatal App Group warning and no longer contained the prior SwiftData fatal error. The local fallback created `default.store` in the app data container and kept the app operational without App Group access.
+
+Known issue:
+- Signed App Group persistence, real CloudKit sync, widget snapshot sharing, and the complete clock-in/edit/relaunch UI workflows still require manual verification.

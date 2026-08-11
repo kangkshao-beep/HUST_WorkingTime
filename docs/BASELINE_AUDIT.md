@@ -50,7 +50,7 @@ Branch at audit start: not a git repository. A baseline repository was initializ
 
 The app already uses SwiftData rather than UserDefaults as the main durable store. `SharedModelContainer` builds a SwiftData schema for `ClockEntry`, `Break`, `Project`, `ProjectTask`, `Workplace`, and `BreakWindow`, configured with App Group `group.com.tsubuzaki.WorkingHour`.
 
-Important risk: `SharedModelContainer` currently calls `fatalError` if container creation fails. That must be replaced by a fallback local store for the new attendance domain.
+`SharedModelContainer` no longer calls `fatalError` for persistent-store failures. It checks that the App Group container is available before constructing the App Group SwiftData configuration, then falls back to a local store and finally an in-memory store. The last-resort in-memory creation still uses `preconditionFailure` because the app cannot operate without any model container.
 
 ## Current Core Models
 
@@ -92,12 +92,14 @@ Before manual Xcode Components install, iOS app compilation could not start beca
 
 The CLI platform download was also attempted, but it stalled at about 9.7% / 830 MB of 8.52 GB and was cancelled. Using Xcode Settings > Components remains the recommended path for this machine.
 
-After manual Xcode Components install, baseline iOS compilation and launch checks passed:
+After manual Xcode Components install, baseline iOS compilation passed:
 
 - `Working Hour` iOS Simulator Debug build passed.
 - `Ushio` iOS Simulator Debug build passed.
 - `Working Hour` iPhoneOS generic Debug build passed with signing disabled.
-- `Working Hour.app` installed and launched on iPhone 17 Pro simulator.
+- `Working Hour.app` installed on the iPhone 17 Pro simulator. The first unsigned launch returned a PID but then exited because SwiftData reached a fatal App Group entitlement path.
+
+After adding an App Group availability preflight on 2026-08-11, the same unsigned simulator scenario passed runtime verification: the app rendered its Today screen, retained the same PID across a second launch query, and logged a non-fatal local-store fallback instead of the previous SwiftData fatal error.
 
 ## Upstream Feature Handling
 

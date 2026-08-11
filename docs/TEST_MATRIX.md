@@ -2,10 +2,10 @@
 
 | Case | Setup | Action | Expected Result | Actual Result | Pass/Fail |
 | --- | --- | --- | --- | --- | --- |
-| 1. Monday, no punch | Fixed Monday workday | Open Today | Shows workday, no record, clock-in CTAs | Core XCTest passed; app builds, installs, and launches on iOS 26.5 simulator | Pending manual UI |
+| 1. Monday, no punch | Fixed Monday workday | Open Today | Shows workday, no record, clock-in CTAs | Core XCTest passed; Today screen and clock-in CTAs rendered on iOS 26.5 simulator | Pass initial UI |
 | 2. Monday, punch now | Fixed Monday workday | Tap now clock-in | Creates one record, target end is +8h | Core XCTest passed; app builds, installs, and launches on iOS 26.5 simulator | Pending manual UI |
 | 3. Manual punch earlier today | Workday, no record | Select earlier time and save | Record uses selected clock-in, no future time allowed | Core XCTest passed; app builds, installs, and launches on iOS 26.5 simulator | Pending manual UI |
-| 4. Countdown crosses relaunch | Existing record | Relaunch app later | Remaining time recalculates from targetEndAt | Core XCTest passed; app launch passed; relaunch workflow not manually exercised | Pending manual UI |
+| 4. Countdown crosses relaunch | Existing record | Relaunch app later | Remaining time recalculates from targetEndAt | Core XCTest passed; stable process launch verified; record/relaunch workflow not manually exercised | Pending manual UI |
 | 5. Countdown reaches zero | Existing record after target | Open app/widget | Shows target reached/completed state | Core XCTest passed; widget extension builds; runtime rendering not manually exercised | Pending manual UI |
 | 6. Saturday | Fixed Saturday | Open Today | Shows rest day and excludes from month denominator | Core XCTest passed | Pending manual UI |
 | 7. Month threshold exactly reached | Valid days equals required | Open Month | Month passed true | Core XCTest passed | Pending manual UI |
@@ -33,4 +33,4 @@
 | `xcodebuild -project WorkingHour.xcodeproj -scheme "Ushio" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedDataUshio CODE_SIGNING_ALLOWED=NO build` | Pass | Widget scheme build passes. |
 | `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphoneos -destination "generic/platform=iOS" -derivedDataPath /private/tmp/WorkingHourDerivedDataDevice CODE_SIGNING_ALLOWED=NO build` | Pass | Generic iOS device build passes with signing disabled. |
 | `xcrun simctl install F6040390-A952-4322-B4EE-EC3FD2E3387A "/private/tmp/WorkingHourDerivedData/Build/Products/Debug-iphonesimulator/Working Hour.app"` | Pass | App installs on iPhone 17 Pro simulator. |
-| `xcrun simctl launch F6040390-A952-4322-B4EE-EC3FD2E3387A com.tsubuzaki.WorkingHour` | Pass | Launch succeeds and returns pid 48599. |
+| `xcrun simctl launch F6040390-A952-4322-B4EE-EC3FD2E3387A com.tsubuzaki.WorkingHour` | Pass after fallback fix | Launch returned stable pid 73466, and a simulator screenshot confirmed the Today screen rendered. |

@@ -20,6 +20,7 @@ Current verification status on 2026-07-08:
 - `Ushio` iOS Simulator Debug build passes.
 - `Working Hour` generic iOS device Debug build passes with signing disabled.
 - `Working Hour.app` installs and launches on the iPhone 17 Pro simulator.
+- Unsigned simulator builds cannot access the App Group. `SharedModelContainer` detects this before constructing the App Group SwiftData configuration and falls back without crashing. Signing with the configured App Group is still required to validate shared app/widget persistence.
 - `xcodebuild -downloadPlatform iOS` was attempted, but the 8.52 GB simulator download stalled at about 9.7% / 830 MB and was cancelled.
 
 Useful verification commands:
