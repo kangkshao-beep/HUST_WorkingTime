@@ -527,3 +527,40 @@ Validation:
 Coverage note:
 - All 131 strings used by the current iPhone attendance flow and all 20 Ushio widget strings have `zh-HK` translations.
 - The catalog still retains 184 untranslated keys from legacy timesheet, project, export, and geofencing screens that are no longer reachable from the current main navigation.
+
+
+## 2026-08-12 - Contextual Cantonese Lyric Sharing
+
+Modified files:
+- `Packages/AttendanceKit/Sources/AttendanceKit/Sharing/CantoneseLyricShareProvider.swift`
+- `Packages/AttendanceKit/Tests/AttendanceKitTests/CantoneseLyricShareProviderTests.swift`
+- `WorkingHour/Features/Attendance/AttendanceTodayView.swift`
+- `WorkingHour/Localizable.xcstrings`
+- `WorkingHourMac/MacAttendanceDashboardView.swift`
+- `WorkingHourMac/zh-HK.lproj/Localizable.strings`
+- `docs/IMPLEMENTATION_LOG.md`
+- `docs/MANUAL_SETUP.md`
+- `docs/TEST_MATRIX.md`
+
+Changes:
+- Added short commercial Cantonese lyric excerpts for clock-in and clock-out sharing on iPhone and Mac.
+- Labels each share with one of five Hong Kong day periods and selects separate clock-in and clock-out excerpts from the current date context.
+- Traditional festivals take precedence over the matching one of all 24 solar terms.
+- Added system share controls with timestamp, occasion, song title, artist, and attendance hashtag.
+- Added Hong Kong Traditional Chinese labels for the lyric section and share control.
+- Kept every bundled excerpt below 90 characters and did not include complete lyrics.
+
+Validation commands:
+- `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-cantonese-lyrics-final`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourCantoneseLyricsIOS CODE_SIGNING_ALLOWED=NO build`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Mac" -configuration Debug -destination "platform=macOS" -derivedDataPath /private/tmp/WorkingHourCantoneseLyricsMac CODE_SIGNING_ALLOWED=NO build`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Watch" -configuration Debug -sdk watchsimulator -destination "generic/platform=watchOS Simulator" -derivedDataPath /private/tmp/WorkingHourCantoneseLyricsWatch CODE_SIGNING_ALLOWED=NO build`
+- `git diff --check`
+
+Result:
+- Passed. `AttendanceKitTests` executed 37 XCTest cases with 0 failures.
+- Passed. iPhone app/widget, native Mac app/widget, and Watch app/complication regression builds succeed.
+- Passed. iPhone and Mac screenshots show both the contextual labels and wrapped lyric text without overlap or clipping.
+
+Known issue:
+- The system share controls compile and render, but the simulator share-sheet interaction was not exercised automatically.

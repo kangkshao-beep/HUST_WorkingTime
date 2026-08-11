@@ -4367,6 +4367,28 @@
         }
       }
     },
+    "分享" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享"
+          }
+        }
+      }
+    },
+    "粤语歌词" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "粵語歌詞"
+          }
+        }
+      }
+    },
     "来源：%@" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -19,6 +19,9 @@ struct AttendanceTodayView: View {
                             store: store,
                             showingManualClockIn: $showingManualClockIn
                         )
+                        if let record = store.todayRecord() {
+                            CantoneseLyricSharePanel(record: record)
+                        }
                         TodayMetricsPanel(store: store)
 
                         if let message = store.lastErrorMessage {
@@ -342,6 +345,83 @@ private struct TodayMetricDivider: View {
         Rectangle()
             .fill(.gray.opacity(0.14))
             .frame(width: 1, height: 72)
+    }
+}
+
+private struct CantoneseLyricSharePanel: View {
+    let record: AttendanceRecord
+
+    private var provider: CantoneseLyricShareProvider {
+        CantoneseLyricShareProvider(timeZone: .current)
+    }
+
+    var body: some View {
+        AttendancePanel {
+            VStack(alignment: .leading, spacing: 14) {
+                Label("粤语歌词", systemImage: "music.note.list")
+                    .font(.headline)
+                    .foregroundStyle(AttendanceTheme.ink)
+
+                LyricShareRow(
+                    share: provider.share(for: record.clockInAt, moment: .clockIn),
+                    color: AttendanceTheme.accent
+                )
+
+                if let clockOutAt = record.actualClockOutAt {
+                    Divider()
+                    LyricShareRow(
+                        share: provider.share(for: clockOutAt, moment: .clockOut),
+                        color: AttendanceTheme.mint
+                    )
+                }
+            }
+        }
+    }
+}
+
+private struct LyricShareRow: View {
+    let share: CantoneseLyricShare
+    let color: Color
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: share.moment == .clockIn ? "sunrise.fill" : "sunset.fill")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(.white)
+                .frame(width: 36, height: 36)
+                .background(color)
+                .clipShape(.rect(cornerRadius: 8))
+
+            VStack(alignment: .leading, spacing: 5) {
+                HStack(spacing: 7) {
+                    Text(verbatim: share.momentLabel)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(AttendanceTheme.ink)
+                    Text(verbatim: share.occasion.label)
+                        .font(.caption2)
+                        .foregroundStyle(AttendanceTheme.secondaryInk)
+                }
+
+                Text(verbatim: "「\(share.excerpt.line)」")
+                    .font(.body.weight(.medium))
+                    .foregroundStyle(AttendanceTheme.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Text(verbatim: "《\(share.excerpt.songTitle)》 · \(share.excerpt.artist)")
+                    .font(.caption)
+                    .foregroundStyle(AttendanceTheme.secondaryInk)
+            }
+
+            Spacer(minLength: 6)
+
+            ShareLink(item: share.shareText, subject: Text(verbatim: share.shareTitle)) {
+                Image(systemName: "square.and.arrow.up")
+                    .frame(width: 24, height: 24)
+            }
+            .buttonStyle(.bordered)
+            .tint(color)
+            .accessibilityLabel(Text("分享"))
+        }
     }
 }
 

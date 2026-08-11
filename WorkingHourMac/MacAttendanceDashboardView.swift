@@ -193,6 +193,7 @@ private struct MacTodayFocus: View {
                     .tint(progressTint)
 
                 MacTimeStrip(record: record)
+                MacCantoneseLyricShareSection(record: record)
 
                 if record.actualClockOutAt == nil {
                     Button {
@@ -317,6 +318,76 @@ private struct MacTimeMetric: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16)
+    }
+}
+
+private struct MacCantoneseLyricShareSection: View {
+    let record: AttendanceRecord
+
+    private var provider: CantoneseLyricShareProvider {
+        CantoneseLyricShareProvider(timeZone: .current)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 13) {
+            Label(macLocalized("粤语歌词"), systemImage: "music.note.list")
+                .font(.headline)
+
+            MacLyricShareRow(
+                share: provider.share(for: record.clockInAt, moment: .clockIn),
+                color: .accentColor
+            )
+
+            if let clockOutAt = record.actualClockOutAt {
+                Divider()
+                MacLyricShareRow(
+                    share: provider.share(for: clockOutAt, moment: .clockOut),
+                    color: .green
+                )
+            }
+        }
+        .padding(.top, 4)
+    }
+}
+
+private struct MacLyricShareRow: View {
+    let share: CantoneseLyricShare
+    let color: Color
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 11) {
+            Image(systemName: share.moment == .clockIn ? "sunrise.fill" : "sunset.fill")
+                .foregroundStyle(color)
+                .frame(width: 24, height: 24)
+
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 7) {
+                    Text(verbatim: share.momentLabel)
+                        .font(.callout.weight(.semibold))
+                    Text(verbatim: share.occasion.label)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Text(verbatim: "「\(share.excerpt.line)」")
+                    .font(.body)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Text(verbatim: "《\(share.excerpt.songTitle)》 · \(share.excerpt.artist)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer(minLength: 8)
+
+            ShareLink(item: share.shareText, subject: Text(verbatim: share.shareTitle)) {
+                Image(systemName: "square.and.arrow.up")
+                    .frame(width: 24, height: 24)
+            }
+            .buttonStyle(.borderless)
+            .help(macLocalized("分享"))
+            .accessibilityLabel(macLocalized("分享"))
+        }
     }
 }
 

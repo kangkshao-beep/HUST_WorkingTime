@@ -15,7 +15,7 @@ Current verification status on 2026-07-08:
 - Xcode 26.6 is installed and selected at `/Applications/Xcode.app/Contents/Developer`.
 - iOS 26.5 and watchOS 26.5 runtimes are installed and visible to `simctl`.
 - `xcodebuild -list -project WorkingHour.xcodeproj` passes.
-- `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-watch-sync-test` passes with 32 XCTest cases.
+- `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-cantonese-lyrics-final` passes with 37 XCTest cases.
 - `Working Hour` iOS Simulator Debug build passes.
 - `Ushio` iOS Simulator Debug build passes.
 - `Working Hour` generic iOS device Debug build passes with signing disabled.

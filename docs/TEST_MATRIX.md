@@ -17,6 +17,9 @@
 | 13. iPhone widget before/after punch | Widget added | Clock in | Snapshot updates widget state | Timeline XCTest passed; widget extension builds for iOS simulator and generic iOS device | Pending widget UI |
 | 14. Mac desktop widget | Mac target configured | Add widget | Shows same rules from local snapshot | Native Mac WidgetKit extension builds, embeds in the host app, and exposes small/medium families; desktop placement not manually exercised | Partial pass |
 | 15. Watch complication | Watch target configured | Add complication | Shows active countdown/status | Watch WidgetKit extension builds for simulator/device architectures, embeds in the Watch app, and exposes three accessory families; watch-face placement not manually exercised | Partial pass |
+| 16. Contextual clock-in lyric | Existing clock-in record | Open Today on iPhone or Mac | Shows a short clock-in excerpt for the local time period and current festival/solar term | iPhone and Mac screenshots verified `返工`, `節氣 · 立秋`, song, artist, and wrapped excerpt | Pass UI |
+| 17. Contextual clock-out lyric | Completed attendance record | Open Today on iPhone or Mac | Keeps the clock-in excerpt and adds a different clock-out excerpt | Mac screenshot verified separate clock-in and clock-out rows with share controls | Pass UI |
+| 18. Festival and solar-term priority | Date is both a traditional festival and within a solar term | Generate lyric share | Traditional festival wins; otherwise all 24 solar terms are covered | Five dedicated XCTest cases pass, including festival priority, Hong Kong time periods, full-year terms, different in/out excerpts, and all bundled excerpt lengths | Pass core |
 
 ## Verification Commands
 
@@ -25,6 +28,7 @@
 | `swift run --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-check-build AttendanceKitChecks` | Pass | Runs the current-toolchain executable coverage for core rules. |
 | `swift build --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-check-build` | Pass | Builds `AttendanceKit` and `AttendanceKitChecks`. |
 | `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-watch-sync-test` | Pass | Xcode 26.6 selected; executed 32 XCTest cases with 0 failures. |
+| `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-cantonese-lyrics-final` | Pass | Executed 37 XCTest cases with 0 failures, including 5 contextual Cantonese lyric sharing cases. |
 | `xcodebuild -list -project WorkingHour.xcodeproj` | Pass | Resolves project schemes and package graph under Xcode 26.6. |
 | `xcrun simctl list runtimes` | Pass | Lists iOS 26.5 and watchOS 26.5 runtimes. |
 | `xcrun simctl list devices available` | Pass | Lists available iPhone/iPad and Apple Watch simulator devices. |
@@ -45,3 +49,6 @@
 | `xcodebuild ... -scheme "Working Hour" ... /private/tmp/WorkingHourIOSZhHK ... build` | Pass | iPhone app and Ushio widget compile; both contain Hong Kong localization resources. |
 | `xcodebuild ... -scheme "Working Hour Mac" ... /private/tmp/WorkingHourMacZhHK ... build` | Pass | Mac host and desktop widget compile; runtime screenshot verified Hong Kong Traditional Chinese and Hong Kong date formatting. |
 | `xcodebuild ... -scheme "Working Hour Watch" ... /private/tmp/WorkingHourWatchZhHK ... build` | Pass | Watch app and complication compile with `zh-HK` app and widget resources. |
+| `xcodebuild ... -scheme "Working Hour" ... /private/tmp/WorkingHourCantoneseLyricsIOS ... build` | Pass | iPhone app and widget compile with the lyric sharing UI. |
+| `xcodebuild ... -scheme "Working Hour Mac" ... /private/tmp/WorkingHourCantoneseLyricsMac ... build` | Pass | Mac host and desktop widget compile; a 920 x 620 runtime screenshot verified both lyric rows without overlap. |
+| `xcodebuild ... -scheme "Working Hour Watch" ... /private/tmp/WorkingHourCantoneseLyricsWatch ... build` | Pass | Watch app and complication regression build succeeds after the shared package addition. |
