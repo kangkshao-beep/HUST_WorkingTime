@@ -4378,6 +4378,17 @@
         }
       }
     },
+    "在 Apple Music 中播放" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 Apple Music 播放"
+          }
+        }
+      }
+    },
     "粤语歌词" : {
       "extractionState" : "manual",
       "localizations" : {

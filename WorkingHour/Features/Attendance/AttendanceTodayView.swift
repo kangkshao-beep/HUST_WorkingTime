@@ -380,39 +380,59 @@ private struct CantoneseLyricSharePanel: View {
 }
 
 private struct LyricShareRow: View {
+    @Environment(\.openURL) private var openURL
+
     let share: CantoneseLyricShare
     let color: Color
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            Image(systemName: share.moment == .clockIn ? "sunrise.fill" : "sunset.fill")
-                .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(.white)
-                .frame(width: 36, height: 36)
-                .background(color)
-                .clipShape(.rect(cornerRadius: 8))
+            Button {
+                openInAppleMusic()
+            } label: {
+                HStack(alignment: .top, spacing: 12) {
+                    ZStack(alignment: .bottomTrailing) {
+                        Image(systemName: share.moment == .clockIn ? "sunrise.fill" : "sunset.fill")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 36, height: 36)
+                            .background(color)
+                            .clipShape(.rect(cornerRadius: 8))
 
-            VStack(alignment: .leading, spacing: 5) {
-                HStack(spacing: 7) {
-                    Text(verbatim: share.momentLabel)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(AttendanceTheme.ink)
-                    Text(verbatim: share.occasion.label)
-                        .font(.caption2)
-                        .foregroundStyle(AttendanceTheme.secondaryInk)
+                        Image(systemName: "play.circle.fill")
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(color, .white)
+                            .background(Circle().fill(.white))
+                            .offset(x: 3, y: 3)
+                    }
+
+                    VStack(alignment: .leading, spacing: 5) {
+                        HStack(spacing: 7) {
+                            Text(verbatim: share.momentLabel)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(AttendanceTheme.ink)
+                            Text(verbatim: share.occasion.label)
+                                .font(.caption2)
+                                .foregroundStyle(AttendanceTheme.secondaryInk)
+                        }
+
+                        Text(verbatim: "「\(share.excerpt.line)」")
+                            .font(.body.weight(.medium))
+                            .foregroundStyle(AttendanceTheme.ink)
+                            .fixedSize(horizontal: false, vertical: true)
+
+                        Text(verbatim: "《\(share.excerpt.songTitle)》 · \(share.excerpt.artist)")
+                            .font(.caption)
+                            .foregroundStyle(AttendanceTheme.secondaryInk)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-
-                Text(verbatim: "「\(share.excerpt.line)」")
-                    .font(.body.weight(.medium))
-                    .foregroundStyle(AttendanceTheme.ink)
-                    .fixedSize(horizontal: false, vertical: true)
-
-                Text(verbatim: "《\(share.excerpt.songTitle)》 · \(share.excerpt.artist)")
-                    .font(.caption)
-                    .foregroundStyle(AttendanceTheme.secondaryInk)
+                .contentShape(Rectangle())
             }
-
-            Spacer(minLength: 6)
+            .buttonStyle(.plain)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .disabled(share.excerpt.appleMusicSearchURL == nil)
+            .accessibilityLabel(Text("在 Apple Music 中播放"))
 
             ShareLink(item: share.shareText, subject: Text(verbatim: share.shareTitle)) {
                 Image(systemName: "square.and.arrow.up")
@@ -421,6 +441,14 @@ private struct LyricShareRow: View {
             .buttonStyle(.bordered)
             .tint(color)
             .accessibilityLabel(Text("分享"))
+        }
+    }
+
+    private func openInAppleMusic() {
+        guard let url = share.excerpt.appleMusicSearchURL else { return }
+        openURL(url) { accepted in
+            guard !accepted, let webURL = share.excerpt.appleMusicWebSearchURL else { return }
+            openURL(webURL)
         }
     }
 }

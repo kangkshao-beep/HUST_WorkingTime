@@ -56,6 +56,25 @@ final class CantoneseLyricShareProviderTests: XCTestCase {
         }
     }
 
+    func testAppleMusicSearchUsesHongKongStorefrontAndSongMetadata() throws {
+        let excerpt = try XCTUnwrap(CantoneseLyricShareProvider.allExcerpts.first)
+        let url = try XCTUnwrap(excerpt.appleMusicSearchURL)
+        let components = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: false))
+        let searchTerm = try XCTUnwrap(
+            components.queryItems?.first(where: { $0.name == "term" })?.value
+        )
+
+        XCTAssertEqual(components.scheme, "music")
+        XCTAssertEqual(components.host, "music.apple.com")
+        XCTAssertEqual(components.path, "/hk/search")
+        XCTAssertTrue(searchTerm.contains(excerpt.songTitle))
+        XCTAssertTrue(searchTerm.contains(excerpt.artist))
+
+        let webURL = try XCTUnwrap(excerpt.appleMusicWebSearchURL)
+        XCTAssertEqual(webURL.scheme, "https")
+        XCTAssertEqual(webURL.host, "music.apple.com")
+    }
+
     private func date(
         _ year: Int,
         _ month: Int,

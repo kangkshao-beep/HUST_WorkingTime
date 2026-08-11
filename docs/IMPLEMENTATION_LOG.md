@@ -547,6 +547,7 @@ Changes:
 - Labels each share with one of five Hong Kong day periods and selects separate clock-in and clock-out excerpts from the current date context.
 - Traditional festivals take precedence over the matching one of all 24 solar terms.
 - Added system share controls with timestamp, occasion, song title, artist, and attendance hashtag.
+- Made the lyric body open a native Hong Kong Apple Music search for the exact song title and artist, with a web fallback while keeping sharing as a separate action.
 - Added Hong Kong Traditional Chinese labels for the lyric section and share control.
 - Kept every bundled excerpt below 90 characters and did not include complete lyrics.
 
@@ -558,9 +559,10 @@ Validation commands:
 - `git diff --check`
 
 Result:
-- Passed. `AttendanceKitTests` executed 37 XCTest cases with 0 failures.
+- Passed. `AttendanceKitTests` executed 38 XCTest cases with 0 failures.
 - Passed. iPhone app/widget, native Mac app/widget, and Watch app/complication regression builds succeed.
 - Passed. iPhone and Mac screenshots show both the contextual labels and wrapped lyric text without overlap or clipping.
 
 Known issue:
 - The system share controls compile and render, but the simulator share-sheet interaction was not exercised automatically.
+- Search links use the native Apple Music URL scheme and Hong Kong storefront; opening a specific catalog track directly will require stable Apple Music catalog IDs.

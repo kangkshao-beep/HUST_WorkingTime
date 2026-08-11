@@ -76,6 +76,25 @@ public struct CantoneseLyricExcerpt: Equatable, Sendable {
         self.songTitle = songTitle
         self.artist = artist
     }
+
+    public var appleMusicSearchURL: URL? {
+        appleMusicSearchURL(scheme: "music")
+    }
+
+    public var appleMusicWebSearchURL: URL? {
+        appleMusicSearchURL(scheme: "https")
+    }
+
+    private func appleMusicSearchURL(scheme: String) -> URL? {
+        var components = URLComponents()
+        components.scheme = scheme
+        components.host = "music.apple.com"
+        components.path = "/hk/search"
+        components.queryItems = [
+            URLQueryItem(name: "term", value: "\(songTitle) \(artist)")
+        ]
+        return components.url
+    }
 }
 
 public struct CantoneseLyricShare: Equatable, Sendable {

@@ -20,6 +20,7 @@
 | 16. Contextual clock-in lyric | Existing clock-in record | Open Today on iPhone or Mac | Shows a short clock-in excerpt for the local time period and current festival/solar term | iPhone and Mac screenshots verified `返工`, `節氣 · 立秋`, song, artist, and wrapped excerpt | Pass UI |
 | 17. Contextual clock-out lyric | Completed attendance record | Open Today on iPhone or Mac | Keeps the clock-in excerpt and adds a different clock-out excerpt | Mac screenshot verified separate clock-in and clock-out rows with share controls | Pass UI |
 | 18. Festival and solar-term priority | Date is both a traditional festival and within a solar term | Generate lyric share | Traditional festival wins; otherwise all 24 solar terms are covered | Five dedicated XCTest cases pass, including festival priority, Hong Kong time periods, full-year terms, different in/out excerpts, and all bundled excerpt lengths | Pass core |
+| 19. Open lyric in Apple Music | A lyric row is visible | Tap the lyric body | Opens a native Hong Kong Apple Music search containing the song title and artist, with web fallback; share remains separate | Native and fallback URL components are covered by XCTest; iPhone and Mac button implementations compile | Pass implementation |
 
 ## Verification Commands
 
@@ -28,7 +29,7 @@
 | `swift run --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-check-build AttendanceKitChecks` | Pass | Runs the current-toolchain executable coverage for core rules. |
 | `swift build --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-check-build` | Pass | Builds `AttendanceKit` and `AttendanceKitChecks`. |
 | `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-watch-sync-test` | Pass | Xcode 26.6 selected; executed 32 XCTest cases with 0 failures. |
-| `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-cantonese-lyrics-final` | Pass | Executed 37 XCTest cases with 0 failures, including 5 contextual Cantonese lyric sharing cases. |
+| `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-cantonese-lyrics-final` | Pass | Executed 38 XCTest cases with 0 failures, including contextual lyric sharing and Hong Kong Apple Music URL coverage. |
 | `xcodebuild -list -project WorkingHour.xcodeproj` | Pass | Resolves project schemes and package graph under Xcode 26.6. |
 | `xcrun simctl list runtimes` | Pass | Lists iOS 26.5 and watchOS 26.5 runtimes. |
 | `xcrun simctl list devices available` | Pass | Lists available iPhone/iPad and Apple Watch simulator devices. |
