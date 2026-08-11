@@ -32,10 +32,14 @@ struct AttendanceHistoryView: View {
                             }
                         }
                     }
+                    .scrollContentBackground(.hidden)
+                    .background(AttendanceScreenBackground())
                 }
             }
+            .background(AttendanceScreenBackground())
             .navigationTitle("历史")
-            .toolbarTitleDisplayMode(.inlineLarge)
+            .toolbarTitleDisplayMode(.inline)
+            .toolbarBackground(.hidden, for: .navigationBar)
             .task { store.configure(modelContext: modelContext) }
             .onAppear { store.configure(modelContext: modelContext) }
             .sheet(item: $selectedRecord) { record in

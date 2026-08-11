@@ -9,24 +9,34 @@ struct AttendanceTodayView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    TodayStatusCard(store: store, showingManualClockIn: $showingManualClockIn)
-                    MonthProgressCard(progress: store.monthProgress())
-                    if let message = store.lastErrorMessage {
-                        Text(message)
-                            .font(.footnote)
-                            .foregroundStyle(.orange)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding()
-                            .background(.orange.opacity(0.12))
-                            .clipShape(.rect(cornerRadius: 8))
+            ZStack {
+                AttendanceScreenBackground()
+
+                ScrollView {
+                    VStack(spacing: 18) {
+                        AttendanceTipBanner(text: "稳稳完成今天，也是在靠近长期目标。")
+                        TodayStatusPanel(
+                            store: store,
+                            showingManualClockIn: $showingManualClockIn
+                        )
+                        TodayMetricsPanel(store: store)
+
+                        if let message = store.lastErrorMessage {
+                            AttendancePanel {
+                                Label(message, systemImage: "exclamationmark.triangle.fill")
+                                    .font(.footnote)
+                                    .foregroundStyle(.orange)
+                            }
+                        }
                     }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 10)
+                    .padding(.bottom, 24)
                 }
-                .padding()
             }
-            .navigationTitle("今天")
-            .toolbarTitleDisplayMode(.inlineLarge)
+            .navigationTitle("工时倒计时")
+            .toolbarTitleDisplayMode(.inline)
+            .toolbarBackground(.hidden, for: .navigationBar)
             .task {
                 store.configure(modelContext: modelContext)
             }
@@ -40,7 +50,7 @@ struct AttendanceTodayView: View {
     }
 }
 
-private struct TodayStatusCard: View {
+private struct TodayStatusPanel: View {
     let store: AttendanceStore
     @Binding var showingManualClockIn: Bool
 
@@ -49,55 +59,103 @@ private struct TodayStatusCard: View {
             let now = context.date
             let record = store.todayRecord(now: now)
             let status = store.status(for: record, now: now)
-            VStack(alignment: .leading, spacing: 14) {
-                Text(now, format: .dateTime.year().month().day().weekday(.wide))
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
 
-                switch status {
-                case .weekend:
-                    Label("今天休息", systemImage: "moon.zzz.fill")
-                        .font(.largeTitle.weight(.bold))
-                    Text("周末无需打卡，本月进度仍会保持更新。")
-                        .foregroundStyle(.secondary)
-                case .notClockedIn:
-                    Text("今天是工作日")
-                        .font(.title.weight(.bold))
-                    Button {
-                        store.clockInNow()
-                    } label: {
-                        Label("现在打卡", systemImage: "figure.walk.arrival")
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-                    .accessibilityLabel("现在打卡")
-                    .accessibilityHint("使用当前时间创建今天的打卡记录")
+            AttendancePanel {
+                VStack(spacing: 20) {
+                    Text(now, format: .dateTime.month().day().weekday(.wide))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(AttendanceTheme.secondaryInk)
+                        .environment(\.locale, Locale(identifier: "zh_CN"))
+                        .frame(maxWidth: .infinity)
 
-                    Button {
-                        showingManualClockIn = true
-                    } label: {
-                        Label("选择打卡时间", systemImage: "clock.badge")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.bordered)
-                    .controlSize(.large)
-                case .working, .targetReached, .clockedOutEarly, .completed:
-                    if let record {
-                        AttendanceCountdownView(store: store, record: record, now: now, status: status, showingManualClockIn: $showingManualClockIn)
+                    switch status {
+                    case .weekend:
+                        WeekendState()
+                    case .notClockedIn:
+                        NotClockedInState(showingManualClockIn: $showingManualClockIn) {
+                            store.clockInNow()
+                        }
+                    case .working, .targetReached, .clockedOutEarly, .completed:
+                        if let record {
+                            AttendanceCountdownContent(
+                                store: store,
+                                record: record,
+                                now: now,
+                                status: status,
+                                showingManualClockIn: $showingManualClockIn
+                            )
+                        }
                     }
                 }
+                .frame(maxWidth: .infinity, minHeight: 330, alignment: .top)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding()
-            .background(.groupedBackground)
-            .clipShape(.rect(cornerRadius: 8))
         }
     }
 }
 
-private struct AttendanceCountdownView: View {
+private struct WeekendState: View {
+    var body: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "moon.zzz.fill")
+                .font(.system(size: 44))
+                .foregroundStyle(AttendanceTheme.accent)
+            Text("今天休息")
+                .font(.title.bold())
+                .foregroundStyle(AttendanceTheme.ink)
+            Text("周末不会计入本月出勤要求")
+                .font(.subheadline)
+                .foregroundStyle(AttendanceTheme.secondaryInk)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+private struct NotClockedInState: View {
+    @Binding var showingManualClockIn: Bool
+    let clockInNow: () -> Void
+
+    var body: some View {
+        VStack(spacing: 18) {
+            Image(systemName: "figure.walk.arrival")
+                .font(.system(size: 42, weight: .semibold))
+                .foregroundStyle(AttendanceTheme.accent)
+                .frame(width: 78, height: 78)
+                .background(AttendanceTheme.accent.opacity(0.10))
+                .clipShape(Circle())
+
+            VStack(spacing: 6) {
+                Text("准备开始今天")
+                    .font(.title2.bold())
+                    .foregroundStyle(AttendanceTheme.ink)
+                Text("打卡后将自动计算 8 小时目标")
+                    .font(.subheadline)
+                    .foregroundStyle(AttendanceTheme.secondaryInk)
+            }
+
+            Button(action: clockInNow) {
+                Label("现在打卡", systemImage: "play.fill")
+                    .fontWeight(.semibold)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(AttendanceTheme.accent)
+            .controlSize(.large)
+
+            Button {
+                showingManualClockIn = true
+            } label: {
+                Label("选择打卡时间", systemImage: "clock.badge")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            .tint(AttendanceTheme.accent)
+            .controlSize(.large)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+private struct AttendanceCountdownContent: View {
     let store: AttendanceStore
     let record: AttendanceRecord
     let now: Date
@@ -105,110 +163,186 @@ private struct AttendanceCountdownView: View {
     @Binding var showingManualClockIn: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            switch status {
-            case .working:
-                Text("距离下班")
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
+        VStack(spacing: 18) {
+            statusHeader
+
+            if status == .working {
                 Text(record.targetEndAt, style: .timer)
-                    .font(.system(size: 52, weight: .bold, design: .rounded))
+                    .font(.system(size: 54, weight: .bold, design: .rounded))
                     .monospacedDigit()
-                    .minimumScaleFactor(0.6)
-            case .targetReached:
-                Label("今天 8 小时已完成", systemImage: "checkmark.circle.fill")
-                    .font(.title.weight(.bold))
-                    .foregroundStyle(.green)
-                Text("可以下班了")
-                    .font(.headline)
-            case .clockedOutEarly:
-                Label("已提前结束今天工作", systemImage: "exclamationmark.circle.fill")
-                    .font(.title2.weight(.bold))
-                    .foregroundStyle(.orange)
-            case .completed:
-                Label("今天已完成", systemImage: "checkmark.circle.fill")
-                    .font(.title.weight(.bold))
-                    .foregroundStyle(.green)
-            case .weekend, .notClockedIn:
-                EmptyView()
+                    .foregroundStyle(AttendanceTheme.accent)
+                    .minimumScaleFactor(0.55)
+                    .lineLimit(1)
+                    .contentTransition(.numericText())
             }
 
-            VStack(alignment: .leading, spacing: 6) {
-                Label("上班：\(record.clockInAt.formatted(date: .omitted, time: .shortened))", systemImage: "figure.walk.arrival")
-                Label("预计下班：\(record.targetEndAt.formatted(date: .omitted, time: .shortened))", systemImage: "door.right.hand.open")
+            AttendanceProgressDots(progress: store.dailyProgress(for: record, now: now))
+
+            HStack(spacing: 18) {
+                TimeLabel(title: "上班", date: record.clockInAt, icon: "figure.walk.arrival")
+                TimeLabel(title: "目标", date: record.targetEndAt, icon: "flag.checkered")
                 if let actualClockOutAt = record.actualClockOutAt {
-                    Label("实际下班：\(actualClockOutAt.formatted(date: .omitted, time: .shortened))", systemImage: "figure.walk.departure")
+                    TimeLabel(title: "下班", date: actualClockOutAt, icon: "figure.walk.departure")
                 }
             }
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity)
 
-            ProgressView(value: store.dailyProgress(for: record, now: now)) {
-                Text("8 小时进度")
-            } currentValueLabel: {
-                Text(store.dailyProgress(for: record, now: now), format: .percent.precision(.fractionLength(0)))
-            }
-
-            HStack {
+            HStack(spacing: 10) {
                 Button {
                     store.clockOut(record: record)
                 } label: {
-                    Label("结束今天工作", systemImage: "figure.walk.departure")
+                    Label("结束工作", systemImage: "stop.fill")
+                        .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
+                .tint(AttendanceTheme.accent)
                 .disabled(record.actualClockOutAt != nil)
 
                 Button {
                     showingManualClockIn = true
                 } label: {
-                    Label("修改打卡时间", systemImage: "pencil")
+                    Image(systemName: "pencil")
+                        .frame(width: 24, height: 24)
                 }
                 .buttonStyle(.bordered)
+                .tint(AttendanceTheme.accent)
+                .accessibilityLabel("修改打卡时间")
             }
+        }
+    }
+
+    @ViewBuilder
+    private var statusHeader: some View {
+        switch status {
+        case .working:
+            Text("距离下班还有")
+                .font(.headline)
+                .foregroundStyle(AttendanceTheme.secondaryInk)
+        case .targetReached:
+            StatusLabel("8 小时已完成", icon: "checkmark.circle.fill", color: AttendanceTheme.mint)
+        case .clockedOutEarly:
+            StatusLabel("今天已提前结束", icon: "exclamationmark.circle.fill", color: .orange)
+        case .completed:
+            StatusLabel("今天已完成", icon: "checkmark.circle.fill", color: AttendanceTheme.mint)
+        case .weekend, .notClockedIn:
+            EmptyView()
         }
     }
 }
 
-private struct MonthProgressCard: View {
-    let progress: MonthProgress
+private struct StatusLabel: View {
+    let title: String
+    let icon: String
+    let color: Color
+
+    init(_ title: String, icon: String, color: Color) {
+        self.title = title
+        self.icon = icon
+        self.color = color
+    }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Text("本月达标进度")
-                    .font(.headline)
-                Spacer()
-                Text(progress.passed ? "已达标" : "未达标")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(progress.passed ? .green : .orange)
-            }
-            ProgressView(value: progress.progressToRequirement)
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("有效打卡")
-                    Text("\(progress.validAttendanceDays) 天")
-                        .font(.title3.weight(.bold))
-                }
-                Spacer()
-                VStack(alignment: .leading) {
-                    Text("80% 要求")
-                    Text("\(progress.requiredDays) 天")
-                        .font(.title3.weight(.bold))
-                }
-                Spacer()
-                VStack(alignment: .leading) {
-                    Text("还需")
-                    Text("\(progress.remainingNeeded) 天")
-                        .font(.title3.weight(.bold))
-                }
-            }
-            .font(.caption)
-            .foregroundStyle(.secondary)
+        Label(title, systemImage: icon)
+            .font(.title2.bold())
+            .foregroundStyle(color)
+    }
+}
+
+private struct TimeLabel: View {
+    let title: String
+    let date: Date
+    let icon: String
+
+    var body: some View {
+        VStack(spacing: 4) {
+            Label(title, systemImage: icon)
+                .labelStyle(.iconOnly)
+                .foregroundStyle(AttendanceTheme.accent)
+            Text(date.formatted(date: .omitted, time: .shortened))
+                .font(.caption.weight(.semibold))
+                .monospacedDigit()
+                .foregroundStyle(AttendanceTheme.secondaryInk)
         }
-        .padding()
-        .background(.groupedBackground)
-        .clipShape(.rect(cornerRadius: 8))
-        .accessibilityLabel("本月已打卡 \(progress.validAttendanceDays) 天，需要 \(progress.requiredDays) 天")
+    }
+}
+
+private struct TodayMetricsPanel: View {
+    let store: AttendanceStore
+
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 1)) { context in
+            let record = store.todayRecord(now: context.date)
+            let progress = record.map { store.dailyProgress(for: $0, now: context.date) } ?? 0
+            let month = store.monthProgress(containing: context.date, now: context.date)
+
+            AttendancePanel {
+                HStack(spacing: 8) {
+                    TodayMetric(
+                        icon: "chart.bar.fill",
+                        color: AttendanceTheme.accent,
+                        value: progress.formatted(.percent.precision(.fractionLength(0))),
+                        label: "今日进度"
+                    )
+                    TodayMetricDivider()
+                    TodayMetric(
+                        icon: "clock.fill",
+                        color: AttendanceTheme.accent,
+                        value: workedDuration(record: record, now: context.date),
+                        label: "已工作"
+                    )
+                    TodayMetricDivider()
+                    TodayMetric(
+                        icon: "calendar.badge.checkmark",
+                        color: AttendanceTheme.mint,
+                        value: "\(month.validAttendanceDays)/\(month.requiredDays)",
+                        label: "月度出勤"
+                    )
+                }
+            }
+        }
+    }
+
+    private func workedDuration(record: AttendanceRecord?, now: Date) -> String {
+        guard let record else { return "0:00" }
+        let end = record.actualClockOutAt ?? now
+        let totalMinutes = max(0, Int(end.timeIntervalSince(record.clockInAt) / 60))
+        return String(format: "%d:%02d", totalMinutes / 60, totalMinutes % 60)
+    }
+}
+
+private struct TodayMetric: View {
+    let icon: String
+    let color: Color
+    let value: String
+    let label: String
+
+    var body: some View {
+        VStack(spacing: 7) {
+            Image(systemName: icon)
+                .font(.system(size: 18, weight: .bold))
+                .foregroundStyle(.white)
+                .frame(width: 38, height: 38)
+                .background(color)
+                .clipShape(.rect(cornerRadius: 8))
+            Text(value)
+                .font(.headline.bold())
+                .monospacedDigit()
+                .foregroundStyle(AttendanceTheme.ink)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+            Text(label)
+                .font(.caption2)
+                .foregroundStyle(AttendanceTheme.secondaryInk)
+        }
+        .frame(maxWidth: .infinity)
+    }
+}
+
+private struct TodayMetricDivider: View {
+    var body: some View {
+        Rectangle()
+            .fill(.gray.opacity(0.14))
+            .frame(width: 1, height: 72)
     }
 }
 

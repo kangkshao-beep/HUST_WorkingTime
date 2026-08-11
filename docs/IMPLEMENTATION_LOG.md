@@ -465,3 +465,44 @@ Result:
 Known issue:
 - The temporary development bundle did not appear in `pluginkit` queries; final desktop placement remains a signed Widget Gallery UI check.
 - Signed Mac App Group/CloudKit capabilities are still required for host-to-widget snapshot sharing.
+
+
+## 2026-08-11 - WatchConnectivity Transport and Reference-Style iPhone UI
+
+Modified files:
+- `Packages/AttendanceKit/Sources/AttendanceKit/Sync/WatchSyncProtocol.swift`
+- `Packages/AttendanceKit/Sources/AttendanceKitChecks/main.swift`
+- `Packages/AttendanceKit/Tests/AttendanceKitTests/SyncTests.swift`
+- `Shared/Attendance/AttendanceStore.swift`
+- `Shared/Attendance/WatchConnectivityCoordinator.swift`
+- `WorkingHour/Features/Attendance/AttendanceTheme.swift`
+- `WorkingHour/Features/Attendance/AttendanceTodayView.swift`
+- `WorkingHour/Features/Attendance/AttendanceMonthView.swift`
+- `WorkingHour/Features/Attendance/AttendanceHistoryView.swift`
+- `WorkingHour/Features/Attendance/AttendanceSettingsView.swift`
+- `WorkingHour/Views/App.swift`
+- `WorkingHour/Views/MainTabView.swift`
+- `WorkingHourWatch/WorkingHourWatchApp.swift`
+- `WorkingHour.xcodeproj/project.pbxproj`
+
+Changes:
+- Added codable Watch command/snapshot envelopes and round-trip codec coverage in `AttendanceKit`.
+- Added a real iPhone/Watch `WCSession` adapter with reachable messaging, unreachable `transferUserInfo` fallback, latest-snapshot `applicationContext`, and persistent command UUID deduplication.
+- Kept Watch actions local-first and merged returned current-month records through the shared conflict resolver.
+- Restyled the iPhone attendance surfaces from the supplied reference using a sky/mint/blush background, translucent panels, blue primary metrics, a 30-dot progress grid, and icon-led summaries.
+- Preserved Today, Month, History, and Settings functionality; reference-only income features were not copied.
+
+Validation commands:
+- `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-watch-sync-test`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourSyncIOSDerivedData CODE_SIGNING_ALLOWED=NO build`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Watch" -configuration Debug -sdk watchsimulator -destination "generic/platform=watchOS Simulator" -derivedDataPath /private/tmp/WorkingHourSyncWatchDerivedData CODE_SIGNING_ALLOWED=NO build`
+- `xcrun simctl install F6040390-A952-4322-B4EE-EC3FD2E3387A "/private/tmp/WorkingHourSyncIOSDerivedData/Build/Products/Debug-iphonesimulator/Working Hour.app"`
+- `xcrun simctl launch F6040390-A952-4322-B4EE-EC3FD2E3387A com.tsubuzaki.WorkingHour`
+
+Result:
+- Passed. `AttendanceKitTests` executed 32 XCTest cases with 0 failures.
+- Passed. iOS app/widget and Watch app/complication simulator builds succeed.
+- Passed. Both no-record and active-countdown iPhone screens were visually inspected at 942 x 2048 with no overlap, clipping, or unreadable controls.
+
+Known issue:
+- Simulator builds validate both sides of the adapter, but actual reachable/background WatchConnectivity delivery still requires a paired physical iPhone and Apple Watch.

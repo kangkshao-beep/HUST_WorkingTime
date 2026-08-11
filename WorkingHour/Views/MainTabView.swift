@@ -26,5 +26,8 @@ struct MainTabView: View {
                 AttendanceSettingsView()
             }
         }
+        .tint(AttendanceTheme.accent)
+        .toolbarBackground(.white.opacity(0.9), for: .tabBar)
+        .toolbarBackground(.visible, for: .tabBar)
     }
 }

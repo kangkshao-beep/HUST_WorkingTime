@@ -27,13 +27,16 @@ struct AttendanceSettingsView: View {
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
-                Section("后续平台") {
-                    Label("macOS app / desktop widget 待 Xcode 可用后创建 target", systemImage: "macbook")
-                    Label("watchOS app / complication 待 Xcode 可用后创建 target", systemImage: "applewatch")
+                Section("跨设备") {
+                    Label("macOS App 与桌面 Widget", systemImage: "macbook")
+                    Label("Apple Watch 与表盘组件", systemImage: "applewatch")
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(AttendanceScreenBackground())
             .navigationTitle("设置")
-            .toolbarTitleDisplayMode(.inlineLarge)
+            .toolbarTitleDisplayMode(.inline)
+            .toolbarBackground(.hidden, for: .navigationBar)
             .task { store.configure(modelContext: modelContext) }
         }
     }

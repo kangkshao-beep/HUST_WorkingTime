@@ -15,7 +15,7 @@ Current verification status on 2026-07-08:
 - Xcode 26.6 is installed and selected at `/Applications/Xcode.app/Contents/Developer`.
 - iOS 26.5 and watchOS 26.5 runtimes are installed and visible to `simctl`.
 - `xcodebuild -list -project WorkingHour.xcodeproj` passes.
-- `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-xcode-test` passes with 30 XCTest cases.
+- `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-watch-sync-test` passes with 32 XCTest cases.
 - `Working Hour` iOS Simulator Debug build passes.
 - `Ushio` iOS Simulator Debug build passes.
 - `Working Hour` generic iOS device Debug build passes with signing disabled.
@@ -108,9 +108,10 @@ Current status:
 - Both targets build for watchOS Simulator and generic watchOS with Xcode 26.6.
 - The Watch app installs and runs on a paired Apple Watch Series 11 simulator.
 - The Watch app uses `AttendanceDashboardView(displayStyle: .compact)` and local SwiftData fallback.
+- The iPhone and Watch apps include `WatchConnectivityCoordinator`: immediate messages use `sendMessage`, unreachable commands use `transferUserInfo`, and the latest iPhone snapshot uses `applicationContext`.
 - The complication extension is embedded and supports accessory inline, circular, and rectangular families.
 
-To share snapshots between the Watch app and complication, add the same Watch-local App Group capability to both targets, then set `AttendanceAppGroupEnabled` to `true` in the widget Info.plist and enable the corresponding app target build setting. Durable iPhone/Watch synchronization still requires owner-controlled CloudKit capabilities and the planned WatchConnectivity transport.
+To share snapshots between the Watch app and complication, add the same Watch-local App Group capability to both targets, then set `AttendanceAppGroupEnabled` to `true` in the widget Info.plist and enable the corresponding app target build setting. Durable CloudKit synchronization still requires owner-controlled capabilities. WatchConnectivity source and simulator builds are complete, but immediate/background delivery must be verified on a paired physical iPhone and Apple Watch.
 
 ## Simulator vs Device
 
