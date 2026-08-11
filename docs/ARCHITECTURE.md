@@ -6,7 +6,7 @@
 flowchart TD
     A[iPhone app] --> B[SwiftData local store]
     C[macOS app] --> B
-    D[Future watchOS app] --> B
+    D[watchOS app] --> B
     B --> E[CloudKit durable sync]
     A <--> F[Future WatchConnectivity fast sync]
     D <--> F
@@ -15,7 +15,7 @@ flowchart TD
     D --> I[Watch snapshot]
     G --> J[iPhone Home/Lock Screen Widget]
     H --> K[Future macOS Desktop Widget]
-    I --> L[Future Watch complication]
+    I --> L[Watch complication]
 ```
 
 ## Shared Business Core
@@ -58,7 +58,7 @@ The old timesheet/project/break/geofencing code remains in the repository as leg
 2. Local SwiftData store fallback.
 3. In-memory fallback.
 
-`AttendanceAppGroupEnabled` and `AttendanceCloudKitEnabled` declare which capabilities each target has configured. The iPhone app enables both; the widget enables App Group only; unsigned or not-yet-configured Mac builds enable neither. Combined with the App Group URL preflight, this prevents SwiftData from entering non-throwing fatal paths for missing App Group or CloudKit entitlements. The first two failure states are non-fatal and exposed in the UI.
+`AttendanceAppGroupEnabled` and `AttendanceCloudKitEnabled` declare which capabilities each target has configured. The iPhone app enables both; the iPhone widget enables App Group only; unsigned or not-yet-configured Mac and Watch builds enable neither. Combined with the App Group URL preflight, this prevents SwiftData from entering non-throwing fatal paths for missing App Group or CloudKit entitlements. The first two failure states are non-fatal and exposed in the UI.
 
 ## macOS App
 
@@ -68,6 +68,12 @@ The native `Working Hour Mac` target embeds `AttendanceDashboardView(displayStyl
 
 The app writes `AttendanceWidgetSnapshot` JSON into the App Group container. The widget reads this snapshot and uses `WidgetTimelineLogic` for meaningful refresh dates. It does not query CloudKit or SwiftData live during timeline generation.
 
+## watchOS App and Complication
+
+The native `Working Hour Watch` target is a modern SwiftUI watchOS application associated with the iPhone bundle through `WKCompanionAppBundleIdentifier`. It embeds `AttendanceDashboardView(displayStyle: .compact)` and reuses the same attendance store, storage model, model container, snapshot store, and `AttendanceKit` rules. Without signed capabilities it uses local SwiftData and shows a compact local-storage status.
+
+`Working Hour Watch Widget` is a WidgetKit extension embedded in the Watch app. It reuses the existing accessory widget provider/view, reads only `AttendanceWidgetSnapshot`, and supports inline, circular, and rectangular accessory families.
+
 ## Remaining Target Work
 
-The native macOS app target now builds and runs on macOS 26.5.2. Mac App Group/CloudKit signing, a macOS widget, the watchOS app, and the watchOS widget/complication remain pending. The shared attendance store and compact dashboard source are prepared for the watchOS target.
+The native macOS and watchOS app targets now build and run. The Watch complication extension builds and is embedded, but adding it to a watch face remains a manual UI check. Mac App Group/CloudKit signing, Watch App Group/CloudKit signing, WatchConnectivity integration, and a macOS widget remain pending.

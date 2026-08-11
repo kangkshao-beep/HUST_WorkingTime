@@ -16,6 +16,20 @@
 		B20000000000000000000005 /* AttendanceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000014 /* AttendanceStore.swift */; };
 		B20000000000000000000006 /* AttendanceDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000015 /* AttendanceDashboardView.swift */; };
 		B20000000000000000000007 /* WidgetSnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000016 /* WidgetSnapshotStore.swift */; };
+		C30000000000000000000001 /* AttendanceKit in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000003 /* AttendanceKit */; };
+		C30000000000000000000002 /* ModelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000011 /* ModelConfiguration.swift */; };
+		C30000000000000000000003 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000012 /* Logger.swift */; };
+		C30000000000000000000004 /* AttendanceStorageRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000013 /* AttendanceStorageRecord.swift */; };
+		C30000000000000000000005 /* AttendanceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000014 /* AttendanceStore.swift */; };
+		C30000000000000000000006 /* AttendanceDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000015 /* AttendanceDashboardView.swift */; };
+		C30000000000000000000007 /* WidgetSnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000016 /* WidgetSnapshotStore.swift */; };
+		D40000000000000000000001 /* AttendanceKit in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000003 /* AttendanceKit */; };
+		D40000000000000000000002 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E44D37E92D06EF5E006C9F1F /* WidgetKit.framework */; };
+		D40000000000000000000003 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E44D37EB2D06EF5E006C9F1F /* SwiftUI.framework */; };
+		D40000000000000000000004 /* HomeWidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40000000000000000000011 /* HomeWidgetProvider.swift */; };
+		D40000000000000000000005 /* HomeWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40000000000000000000012 /* HomeWidgetView.swift */; };
+		D40000000000000000000006 /* WidgetSnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000016 /* WidgetSnapshotStore.swift */; };
+		D40000000000000000000007 /* Working Hour Watch Widget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D40000000000000000000010 /* Working Hour Watch Widget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E4260F9A2CB975F30078946D /* Komponents in Frameworks */ = {isa = PBXBuildFile; productRef = E4260F992CB975F30078946D /* Komponents */; };
 		E4260FB52CBAB8C20078946D /* xlsxwriter in Frameworks */ = {isa = PBXBuildFile; productRef = E4260FB42CBAB8C20078946D /* xlsxwriter */; };
 		E44D37EA2D06EF5F006C9F1F /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E44D37E92D06EF5E006C9F1F /* WidgetKit.framework */; };
@@ -24,6 +38,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		D40000000000000000000060 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E4260F702CB6B0EA0078946D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D40000000000000000000040;
+			remoteInfo = "Working Hour Watch Widget";
+		};
 		E44D37F92D06EF60006C9F1F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E4260F702CB6B0EA0078946D /* Project object */;
@@ -34,6 +55,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		D40000000000000000000033 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				D40000000000000000000007 /* Working Hour Watch Widget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E44D38002D06EF60006C9F1F /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -55,6 +87,10 @@
 		B20000000000000000000014 /* AttendanceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/Attendance/AttendanceStore.swift; sourceTree = SOURCE_ROOT; };
 		B20000000000000000000015 /* AttendanceDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/Attendance/AttendanceDashboardView.swift; sourceTree = SOURCE_ROOT; };
 		B20000000000000000000016 /* WidgetSnapshotStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/WidgetSupport/WidgetSnapshotStore.swift; sourceTree = SOURCE_ROOT; };
+		C30000000000000000000010 /* Working Hour Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Working Hour Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D40000000000000000000010 /* Working Hour Watch Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Working Hour Watch Widget.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D40000000000000000000011 /* HomeWidgetProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Ushio/Home Screen Widget/HomeWidgetProvider.swift"; sourceTree = SOURCE_ROOT; };
+		D40000000000000000000012 /* HomeWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Ushio/Home Screen Widget/HomeWidgetView.swift"; sourceTree = SOURCE_ROOT; };
 		E4260F782CB6B0EA0078946D /* Working Hour.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Working Hour.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E44D37E72D06EF5E006C9F1F /* Ushio.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Ushio.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E44D37E92D06EF5E006C9F1F /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -62,6 +98,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D40000000000000000000021 /* Exceptions for "WorkingHourWatchWidget" folder in "Working Hour Watch Widget" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = D40000000000000000000040 /* Working Hour Watch Widget */;
+		};
 		E4C25B902F373EC700F3BADF /* Exceptions for "Ushio" folder in "Ushio" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -90,6 +133,19 @@
 		B20000000000000000000020 /* WorkingHourMac */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = WorkingHourMac;
+			sourceTree = "<group>";
+		};
+		C30000000000000000000020 /* WorkingHourWatch */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = WorkingHourWatch;
+			sourceTree = "<group>";
+		};
+		D40000000000000000000020 /* WorkingHourWatchWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D40000000000000000000021 /* Exceptions for "WorkingHourWatchWidget" folder in "Working Hour Watch Widget" target */,
+			);
+			path = WorkingHourWatchWidget;
 			sourceTree = "<group>";
 		};
 		E4C25B742F373EBE00F3BADF /* Shared */ = {
@@ -125,6 +181,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C30000000000000000000030 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C30000000000000000000001 /* AttendanceKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D40000000000000000000030 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D40000000000000000000001 /* AttendanceKit in Frameworks */,
+				D40000000000000000000002 /* WidgetKit.framework in Frameworks */,
+				D40000000000000000000003 /* SwiftUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E4260F752CB6B0EA0078946D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -153,8 +227,11 @@
 			children = (
 				E4C25B742F373EBE00F3BADF /* Shared */,
 				B20000000000000000000021 /* Shared Attendance Sources */,
+				D40000000000000000000022 /* Shared Watch Widget Sources */,
 				E4C25BD12F373EE800F3BADF /* WorkingHour */,
 				B20000000000000000000020 /* WorkingHourMac */,
+				C30000000000000000000020 /* WorkingHourWatch */,
+				D40000000000000000000020 /* WorkingHourWatchWidget */,
 				E4C25B892F373EC700F3BADF /* Ushio */,
 				E44D37E82D06EF5E006C9F1F /* Frameworks */,
 				E4260F792CB6B0EA0078946D /* Products */,
@@ -166,6 +243,8 @@
 			children = (
 				E4260F782CB6B0EA0078946D /* Working Hour.app */,
 				B20000000000000000000010 /* Working Hour Mac.app */,
+				C30000000000000000000010 /* Working Hour Watch.app */,
+				D40000000000000000000010 /* Working Hour Watch Widget.appex */,
 				E44D37E72D06EF5E006C9F1F /* Ushio.appex */,
 			);
 			name = Products;
@@ -193,6 +272,15 @@
 			name = "Shared Attendance Sources";
 			sourceTree = "<group>";
 		};
+		D40000000000000000000022 /* Shared Watch Widget Sources */ = {
+			isa = PBXGroup;
+			children = (
+				D40000000000000000000011 /* HomeWidgetProvider.swift */,
+				D40000000000000000000012 /* HomeWidgetView.swift */,
+			);
+			name = "Shared Watch Widget Sources";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -218,6 +306,54 @@
 			productName = WorkingHourMac;
 			productReference = B20000000000000000000010 /* Working Hour Mac.app */;
 			productType = "com.apple.product-type.application";
+		};
+		C30000000000000000000040 /* Working Hour Watch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C30000000000000000000052 /* Build configuration list for PBXNativeTarget "Working Hour Watch" */;
+			buildPhases = (
+				C30000000000000000000031 /* Sources */,
+				C30000000000000000000030 /* Frameworks */,
+				C30000000000000000000032 /* Resources */,
+				D40000000000000000000033 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D40000000000000000000061 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C30000000000000000000020 /* WorkingHourWatch */,
+			);
+			name = "Working Hour Watch";
+			packageProductDependencies = (
+				A10000000000000000000003 /* AttendanceKit */,
+			);
+			productName = WorkingHourWatch;
+			productReference = C30000000000000000000010 /* Working Hour Watch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D40000000000000000000040 /* Working Hour Watch Widget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D40000000000000000000052 /* Build configuration list for PBXNativeTarget "Working Hour Watch Widget" */;
+			buildPhases = (
+				D40000000000000000000031 /* Sources */,
+				D40000000000000000000030 /* Frameworks */,
+				D40000000000000000000032 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				D40000000000000000000020 /* WorkingHourWatchWidget */,
+			);
+			name = "Working Hour Watch Widget";
+			packageProductDependencies = (
+				A10000000000000000000003 /* AttendanceKit */,
+			);
+			productName = WorkingHourWatchWidget;
+			productReference = D40000000000000000000010 /* Working Hour Watch Widget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		E4260F772CB6B0EA0078946D /* Working Hour */ = {
 			isa = PBXNativeTarget;
@@ -285,6 +421,12 @@
 					B20000000000000000000040 = {
 						CreatedOnToolsVersion = 26.6;
 					};
+					C30000000000000000000040 = {
+						CreatedOnToolsVersion = 26.6;
+					};
+					D40000000000000000000040 = {
+						CreatedOnToolsVersion = 26.6;
+					};
 					E4260F772CB6B0EA0078946D = {
 						CreatedOnToolsVersion = 16.0;
 					};
@@ -315,6 +457,8 @@
 			targets = (
 				E4260F772CB6B0EA0078946D /* Working Hour */,
 				B20000000000000000000040 /* Working Hour Mac */,
+				C30000000000000000000040 /* Working Hour Watch */,
+				D40000000000000000000040 /* Working Hour Watch Widget */,
 				E44D37E62D06EF5E006C9F1F /* Ushio */,
 			);
 		};
@@ -322,6 +466,20 @@
 
 /* Begin PBXResourcesBuildPhase section */
 		B20000000000000000000032 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C30000000000000000000032 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D40000000000000000000032 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -379,6 +537,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C30000000000000000000031 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C30000000000000000000002 /* ModelConfiguration.swift in Sources */,
+				C30000000000000000000003 /* Logger.swift in Sources */,
+				C30000000000000000000004 /* AttendanceStorageRecord.swift in Sources */,
+				C30000000000000000000005 /* AttendanceStore.swift in Sources */,
+				C30000000000000000000006 /* AttendanceDashboardView.swift in Sources */,
+				C30000000000000000000007 /* WidgetSnapshotStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D40000000000000000000031 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D40000000000000000000004 /* HomeWidgetProvider.swift in Sources */,
+				D40000000000000000000005 /* HomeWidgetView.swift in Sources */,
+				D40000000000000000000006 /* WidgetSnapshotStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E4260F742CB6B0EA0078946D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -396,6 +577,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D40000000000000000000061 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D40000000000000000000040 /* Working Hour Watch Widget */;
+			targetProxy = D40000000000000000000060 /* PBXContainerItemProxy */;
+		};
 		E44D37FA2D06EF60006C9F1F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E44D37E62D06EF5E006C9F1F /* Ushio */;
@@ -453,6 +639,116 @@
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		C30000000000000000000050 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Working Hour";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.tsubuzaki.WorkingHour;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsubuzaki.WorkingHour.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		C30000000000000000000051 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Working Hour";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.tsubuzaki.WorkingHour;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsubuzaki.WorkingHour.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+		D40000000000000000000050 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WorkingHourWatchWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Working Hour";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsubuzaki.WorkingHour.watchkitapp.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		D40000000000000000000051 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WorkingHourWatchWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Working Hour";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tsubuzaki.WorkingHour.watchkitapp.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Release;
 		};
@@ -725,6 +1021,24 @@
 			buildConfigurations = (
 				B20000000000000000000050 /* Debug */,
 				B20000000000000000000051 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C30000000000000000000052 /* Build configuration list for PBXNativeTarget "Working Hour Watch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C30000000000000000000050 /* Debug */,
+				C30000000000000000000051 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D40000000000000000000052 /* Build configuration list for PBXNativeTarget "Working Hour Watch Widget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D40000000000000000000050 /* Debug */,
+				D40000000000000000000051 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

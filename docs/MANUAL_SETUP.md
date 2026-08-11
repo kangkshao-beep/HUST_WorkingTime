@@ -30,6 +30,8 @@ xcrun simctl list runtimes
 xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedData CODE_SIGNING_ALLOWED=NO build
 xcodebuild -project WorkingHour.xcodeproj -scheme "Ushio" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedDataUshio CODE_SIGNING_ALLOWED=NO build
 xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphoneos -destination "generic/platform=iOS" -derivedDataPath /private/tmp/WorkingHourDerivedDataDevice CODE_SIGNING_ALLOWED=NO build
+xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Watch" -configuration Debug -sdk watchsimulator -destination "generic/platform=watchOS Simulator" -derivedDataPath /private/tmp/WorkingHourWatchDerivedData CODE_SIGNING_ALLOWED=NO build
+xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Watch" -configuration Debug -sdk watchos -destination "generic/platform=watchOS" -derivedDataPath /private/tmp/WorkingHourWatchDeviceDerivedData CODE_SIGNING_ALLOWED=NO build
 ```
 
 ## Identifiers To Replace
@@ -86,14 +88,17 @@ The native macOS app and future desktop widget should use:
 - `Shared/Attendance/AttendanceDashboardView(displayStyle: .regular)` as the app root content.
 - `Shared/Attendance/AttendanceStore` for persistence and snapshot writes.
 
-## Future watchOS Targets
+## watchOS App and Widget Targets
 
-Watch app and complications should use:
-- AttendanceKit shared rules.
-- Local durable store where supported.
-- WatchConnectivity for fast iPhone/watch sync.
-- App Group snapshot for watch complication rendering where applicable.
-- `Shared/Attendance/AttendanceDashboardView(displayStyle: .compact)` for the watch app root content.
+Targets: `Working Hour Watch` and `Working Hour Watch Widget`
+
+Current status:
+- Both targets build for watchOS Simulator and generic watchOS with Xcode 26.6.
+- The Watch app installs and runs on a paired Apple Watch Series 11 simulator.
+- The Watch app uses `AttendanceDashboardView(displayStyle: .compact)` and local SwiftData fallback.
+- The complication extension is embedded and supports accessory inline, circular, and rectangular families.
+
+To share snapshots between the Watch app and complication, add the same Watch-local App Group capability to both targets, then set `AttendanceAppGroupEnabled` to `true` in the widget Info.plist and enable the corresponding app target build setting. Durable iPhone/Watch synchronization still requires owner-controlled CloudKit capabilities and the planned WatchConnectivity transport.
 
 ## Simulator vs Device
 
@@ -104,6 +109,6 @@ Simulator can validate:
 
 Device is required for final validation of:
 - Real iCloud/CloudKit sync.
-- Apple Watch app and complications.
+- Final complication placement and rendering on a physical Apple Watch.
 - WatchConnectivity behavior.
 - Notification permission and delivery behavior.

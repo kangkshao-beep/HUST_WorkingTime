@@ -67,6 +67,7 @@ private struct AttendanceDashboardTodayCard: View {
             Text(now, format: .dateTime.year().month().day().weekday(.wide))
                 .font(.headline)
                 .foregroundStyle(.secondary)
+                .environment(\.locale, Locale(identifier: "zh_CN"))
 
             switch status {
             case .weekend:

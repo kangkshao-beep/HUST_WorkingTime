@@ -12,11 +12,11 @@
 | 8. Month threshold not reached | Valid days below required | Open Month | Month passed false, remaining needed shown | Core XCTest passed | Pending manual UI |
 | 9. Duplicate same-day record | Two records same dayKey | Calculate month | Counts one canonical record | Core XCTest passed | Pass core |
 | 10. iPhone offline -> later sync | Device offline | Clock in, later online | Local works, CloudKit catches up | Not run: device required | Pending |
-| 11. Watch offline -> later sync | Watch offline | Clock in on watch | Local-first update, queued sync | Sync protocol XCTest passed; watch app not implemented | Pending app run |
+| 11. Watch offline -> later sync | Watch offline | Clock in on watch | Local-first update, queued sync | Native Watch app builds, installs, launches, and uses local SwiftData fallback; sync protocol XCTest passes, but WatchConnectivity transport is not wired | Pass app run; pending sync |
 | 12. Mac receives CloudKit update | Mac signed in | Sync iPhone record | Mac app shows same record | Native Mac app builds and runs with local fallback; signed CloudKit sync not run | Pending sync |
 | 13. iPhone widget before/after punch | Widget added | Clock in | Snapshot updates widget state | Timeline XCTest passed; widget extension builds for iOS simulator and generic iOS device | Pending widget UI |
 | 14. Mac desktop widget | Mac target configured | Add widget | Shows same rules from local snapshot | Shared snapshot/timeline rules exist; native macOS widget target not created | Pending |
-| 15. Watch complication | Watch target configured | Add complication | Shows active countdown/status | Shared compact dashboard and sync protocol exist; watch target/complication not created | Pending |
+| 15. Watch complication | Watch target configured | Add complication | Shows active countdown/status | Watch WidgetKit extension builds for simulator/device architectures, embeds in the Watch app, and exposes three accessory families; watch-face placement not manually exercised | Partial pass |
 
 ## Verification Commands
 
@@ -36,3 +36,6 @@
 | `xcrun simctl launch F6040390-A952-4322-B4EE-EC3FD2E3387A com.tsubuzaki.WorkingHour` | Pass after fallback fix | Latest build returned stable pid 78133; the Today screen was previously screenshot-verified. |
 | `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Mac" -configuration Debug -destination "platform=macOS" -derivedDataPath /private/tmp/WorkingHourMacDerivedData CODE_SIGNING_ALLOWED=NO build` | Pass | Native Mac app and shared attendance layer compile for macOS. |
 | `pgrep -x "Working Hour Mac"` | Pass | Process remained active as pid 77613 after launch; shared dashboard rendered with the expected local-storage warning. |
+| `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Watch" -configuration Debug -sdk watchsimulator -destination "generic/platform=watchOS Simulator" ... build` | Pass | Watch app and embedded WidgetKit complication compile for the simulator. |
+| `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Watch" -configuration Debug -sdk watchos -destination "generic/platform=watchOS" ... build` | Pass | Watch app and complication compile for generic device architectures. |
+| `xcrun simctl launch 1E19D673-DB89-4DEE-9894-9B86D4AA7C67 com.tsubuzaki.WorkingHour.watchkitapp` | Pass | Complete Watch bundle retained pid 88322 across a second launch query; screenshot verified the compact layout. |

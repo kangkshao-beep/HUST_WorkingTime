@@ -376,3 +376,50 @@ Result:
 Known issue:
 - The Mac target still needs owner-controlled signing capabilities before App Group/CloudKit sync can be tested.
 - A macOS widget and native watchOS app/widget targets remain pending.
+
+
+## 2026-08-11 - Native watchOS App and Complication
+
+Modified files:
+- `Shared/Attendance/AttendanceDashboardView.swift`
+- `WorkingHourWatch/WorkingHourWatchApp.swift`
+- `WorkingHourWatchWidget/Info.plist`
+- `WorkingHourWatchWidget/WorkingHourWatchWidget.swift`
+- `WorkingHour.xcodeproj/project.pbxproj`
+- `WorkingHour.xcodeproj/xcshareddata/xcschemes/Working Hour Watch.xcscheme`
+- `WorkingHour.xcodeproj/xcshareddata/xcschemes/Working Hour Watch Widget.xcscheme`
+- `docs/ARCHITECTURE.md`
+- `docs/BASELINE_AUDIT.md`
+- `docs/IMPLEMENTATION_LOG.md`
+- `docs/MANUAL_SETUP.md`
+- `docs/TEST_MATRIX.md`
+
+Changes:
+- Added the native `Working Hour Watch` SwiftUI application and shared scheme.
+- Reused the shared compact dashboard, attendance store, SwiftData record, snapshot store, model container, and `AttendanceKit` rules.
+- Added the `Working Hour Watch Widget` extension with accessory inline, circular, and rectangular complication families.
+- Reused the existing snapshot provider and accessory views instead of querying SwiftData or CloudKit inside WidgetKit.
+- Added a compact one-line local-storage warning and Chinese date locale for the Watch first viewport.
+
+Validation commands:
+- `xcodebuild -list -project WorkingHour.xcodeproj`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Watch" -configuration Debug -sdk watchsimulator -destination "generic/platform=watchOS Simulator" -derivedDataPath /private/tmp/WorkingHourWatchWithWidgetDerivedData CODE_SIGNING_ALLOWED=NO build`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Watch" -configuration Debug -sdk watchos -destination "generic/platform=watchOS" -derivedDataPath /private/tmp/WorkingHourWatchWithWidgetDeviceDerivedData CODE_SIGNING_ALLOWED=NO build`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourFinalIOSRegression CODE_SIGNING_ALLOWED=NO build`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Mac" -configuration Debug -destination "platform=macOS" -derivedDataPath /private/tmp/WorkingHourFinalMacRegression CODE_SIGNING_ALLOWED=NO build`
+- `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-watch-target-test`
+- `xcrun simctl pair 1E19D673-DB89-4DEE-9894-9B86D4AA7C67 F6040390-A952-4322-B4EE-EC3FD2E3387A`
+- `xcrun simctl install 1E19D673-DB89-4DEE-9894-9B86D4AA7C67 "/private/tmp/WorkingHourWatchWithWidgetDerivedData/Build/Products/Debug-watchsimulator/Working Hour Watch.app"`
+- `xcrun simctl launch 1E19D673-DB89-4DEE-9894-9B86D4AA7C67 com.tsubuzaki.WorkingHour.watchkitapp`
+
+Result:
+- Passed. Xcode lists both Watch targets and shared schemes.
+- Passed. The Watch app and embedded complication compile for simulator and generic device architectures.
+- Passed. The complete Watch bundle installed on a paired Apple Watch Series 11 simulator and retained pid 88322 across a second launch query.
+- Passed. Screenshot inspection confirmed a readable first viewport without overlapping controls.
+- Passed. iOS app/widget and native macOS app regression builds succeed.
+- Passed. `AttendanceKitTests` executed 30 XCTest cases with 0 failures.
+
+Known issue:
+- Signed Watch App Group/CloudKit capabilities and WatchConnectivity transport remain pending.
+- The extension bundle and WidgetKit extension point are validated, but adding the complication to a watch face still requires manual UI verification.
