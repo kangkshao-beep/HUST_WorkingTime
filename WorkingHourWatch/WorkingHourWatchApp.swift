@@ -22,6 +22,9 @@ struct WorkingHourWatchApp: App {
 
                 AttendanceDashboardView(displayStyle: .compact)
             }
+            .onAppear {
+                WatchConnectivityCoordinator.shared.activate()
+            }
         }
         .modelContainer(modelContainer)
     }

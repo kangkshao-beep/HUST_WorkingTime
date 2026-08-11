@@ -86,9 +86,34 @@ final class AttendanceStore {
     }
 
     func clockIn(at clockInAt: Date, isManual: Bool) {
+        #if os(watchOS)
+        let didClockIn = clockIn(
+            at: clockInAt,
+            isManual: isManual,
+            sourceDevice: AttendanceDeviceName.current
+        )
+        guard didClockIn else { return }
+        WatchConnectivityCoordinator.shared.send(
+            command: .clockInAt(clockInAt, commandID: UUID())
+        )
+        #else
+        clockIn(
+            at: clockInAt,
+            isManual: isManual,
+            sourceDevice: AttendanceDeviceName.current
+        )
+        #endif
+    }
+
+    @discardableResult
+    private func clockIn(
+        at clockInAt: Date,
+        isManual: Bool,
+        sourceDevice: String
+    ) -> Bool {
         guard clockInAt <= Date() else {
             lastErrorMessage = "打卡时间不能晚于当前时间。"
-            return
+            return false
         }
         let now = Date()
         let dayKey = workdayCalendar.dayKey(for: clockInAt)
@@ -98,10 +123,10 @@ final class AttendanceStore {
             targetEndAt: engine.targetEnd(for: clockInAt, policy: policy),
             createdAt: now,
             updatedAt: now,
-            sourceDevice: AttendanceDeviceName.current,
+            sourceDevice: sourceDevice,
             isManualClockIn: isManual
         )
-        upsert(record)
+        return upsert(record)
     }
 
     func update(record: AttendanceRecord, clockInAt: Date, actualClockOutAt: Date?) {
@@ -119,13 +144,19 @@ final class AttendanceStore {
         record.actualClockOutAt = actualClockOutAt
         record.updatedAt = Date()
         record.isManualClockIn = true
-        upsert(record)
+        guard upsert(record) else { return }
     }
 
     func clockOut(record: AttendanceRecord, at clockOutAt: Date = Date()) {
         record.actualClockOutAt = clockOutAt
         record.updatedAt = Date()
-        upsert(record)
+        guard upsert(record) else { return }
+
+        #if os(watchOS)
+        WatchConnectivityCoordinator.shared.send(
+            command: .clockOut(clockOutAt, commandID: UUID())
+        )
+        #endif
     }
 
     func delete(record: AttendanceRecord) {
@@ -152,7 +183,12 @@ final class AttendanceStore {
         do {
             try WidgetSnapshotStore.write(snapshot)
             #if canImport(WidgetKit)
-            WidgetCenter.shared.reloadTimelines(ofKind: "com.tsubuzaki.WorkingHour.Ushio.Home")
+            WidgetCenter.shared.reloadAllTimelines()
+            #endif
+            #if os(iOS)
+            WatchConnectivityCoordinator.shared.publish(
+                snapshot: makeWatchSyncSnapshot(widgetSnapshot: snapshot)
+            )
             #endif
         } catch {
             lastErrorMessage = "Widget 快照更新失败：\(error.localizedDescription)"
@@ -160,8 +196,67 @@ final class AttendanceStore {
         }
     }
 
-    private func upsert(_ record: AttendanceRecord) {
-        guard let modelContext else { return }
+    func applyWatchCommand(_ command: WatchCommand) {
+        switch command {
+        case .requestSnapshot:
+            return
+        case .clockInNow:
+            clockIn(at: Date(), isManual: false, sourceDevice: "Apple Watch")
+        case .clockInAt(let date, _):
+            clockIn(at: date, isManual: false, sourceDevice: "Apple Watch")
+        case .clockOut(let date, _):
+            guard let record = todayRecord(now: date) else {
+                lastErrorMessage = "未找到 Watch 下班命令对应的打卡记录。"
+                return
+            }
+            clockOut(record: record, at: date)
+        }
+    }
+
+    func makeWatchSyncSnapshot(now: Date = Date()) -> WatchSyncSnapshot {
+        makeWatchSyncSnapshot(widgetSnapshot: makeSnapshot(now: now))
+    }
+
+    func mergeWatchSyncSnapshot(_ snapshot: WatchSyncSnapshot) {
+        guard let modelContext else {
+            writeReceivedWidgetSnapshot(snapshot.widgetSnapshot)
+            return
+        }
+
+        do {
+            for transportRecord in snapshot.records {
+                let incoming = transportRecord.domainRecord()
+                let dayKey = incoming.dayKey
+                let descriptor = FetchDescriptor<AttendanceStorageRecord>(
+                    predicate: #Predicate { $0.dayKey == dayKey }
+                )
+                let matches = try modelContext.fetch(descriptor)
+                let existingRecords = matches.map { $0.domainRecord() }
+                let preferred = resolver.canonicalRecord(from: existingRecords + [incoming])
+
+                guard preferred === incoming else { continue }
+                if let existing = resolverStorageRecord(from: matches) {
+                    existing.apply(incoming)
+                    for duplicate in matches where duplicate.id != existing.id {
+                        modelContext.delete(duplicate)
+                    }
+                } else {
+                    modelContext.insert(AttendanceStorageRecord(record: incoming))
+                }
+            }
+
+            try modelContext.save()
+            load()
+            refreshSnapshotAndWidgets()
+        } catch {
+            lastErrorMessage = "Watch 快照合并失败：\(error.localizedDescription)"
+            log(lastErrorMessage ?? "Watch snapshot merge failed", prefix: "watch-sync")
+        }
+    }
+
+    @discardableResult
+    private func upsert(_ record: AttendanceRecord) -> Bool {
+        guard let modelContext else { return false }
         do {
             let dayKey = record.dayKey
             let descriptor = FetchDescriptor<AttendanceStorageRecord>(
@@ -179,9 +274,11 @@ final class AttendanceStore {
             try modelContext.save()
             load()
             refreshSnapshotAndWidgets()
+            return true
         } catch {
             lastErrorMessage = "保存失败：\(error.localizedDescription)"
             log(lastErrorMessage ?? "Attendance upsert failed", prefix: "persistence")
+            return false
         }
     }
 
@@ -192,6 +289,33 @@ final class AttendanceStore {
             }
             return $0.id.uuidString < $1.id.uuidString
         }.last
+    }
+
+    private func makeWatchSyncSnapshot(
+        widgetSnapshot: AttendanceWidgetSnapshot
+    ) -> WatchSyncSnapshot {
+        let monthPrefix = String(widgetSnapshot.dayKey.prefix(7))
+        let currentMonthRecords = records
+            .filter { $0.dayKey.hasPrefix(monthPrefix) }
+            .map(WatchAttendanceRecord.init(record:))
+
+        return WatchSyncSnapshot(
+            generatedAt: widgetSnapshot.generatedAt,
+            records: currentMonthRecords,
+            widgetSnapshot: widgetSnapshot
+        )
+    }
+
+    private func writeReceivedWidgetSnapshot(_ snapshot: AttendanceWidgetSnapshot) {
+        do {
+            try WidgetSnapshotStore.write(snapshot)
+            #if canImport(WidgetKit)
+            WidgetCenter.shared.reloadAllTimelines()
+            #endif
+        } catch {
+            lastErrorMessage = "Watch 快照写入失败：\(error.localizedDescription)"
+            log(lastErrorMessage ?? "Watch snapshot write failed", prefix: "watch-sync")
+        }
     }
 
     private func makeSnapshot(now: Date) -> AttendanceWidgetSnapshot {

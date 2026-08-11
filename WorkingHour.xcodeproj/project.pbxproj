@@ -23,6 +23,7 @@
 		C30000000000000000000005 /* AttendanceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000014 /* AttendanceStore.swift */; };
 		C30000000000000000000006 /* AttendanceDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000015 /* AttendanceDashboardView.swift */; };
 		C30000000000000000000007 /* WidgetSnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000016 /* WidgetSnapshotStore.swift */; };
+		C30000000000000000000008 /* WatchConnectivityCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000017 /* WatchConnectivityCoordinator.swift */; };
 		D40000000000000000000001 /* AttendanceKit in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000003 /* AttendanceKit */; };
 		D40000000000000000000002 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E44D37E92D06EF5E006C9F1F /* WidgetKit.framework */; };
 		D40000000000000000000003 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E44D37EB2D06EF5E006C9F1F /* SwiftUI.framework */; };
@@ -112,6 +113,7 @@
 		B20000000000000000000014 /* AttendanceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/Attendance/AttendanceStore.swift; sourceTree = SOURCE_ROOT; };
 		B20000000000000000000015 /* AttendanceDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/Attendance/AttendanceDashboardView.swift; sourceTree = SOURCE_ROOT; };
 		B20000000000000000000016 /* WidgetSnapshotStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/WidgetSupport/WidgetSnapshotStore.swift; sourceTree = SOURCE_ROOT; };
+		B20000000000000000000017 /* WatchConnectivityCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/Attendance/WatchConnectivityCoordinator.swift; sourceTree = SOURCE_ROOT; };
 		C30000000000000000000010 /* Working Hour Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Working Hour Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D40000000000000000000010 /* Working Hour Watch Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Working Hour Watch Widget.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D40000000000000000000011 /* HomeWidgetProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Ushio/Home Screen Widget/HomeWidgetProvider.swift"; sourceTree = SOURCE_ROOT; };
@@ -321,6 +323,7 @@
 				B20000000000000000000014 /* AttendanceStore.swift */,
 				B20000000000000000000015 /* AttendanceDashboardView.swift */,
 				B20000000000000000000016 /* WidgetSnapshotStore.swift */,
+				B20000000000000000000017 /* WatchConnectivityCoordinator.swift */,
 			);
 			name = "Shared Attendance Sources";
 			sourceTree = "<group>";
@@ -636,6 +639,7 @@
 				C30000000000000000000005 /* AttendanceStore.swift in Sources */,
 				C30000000000000000000006 /* AttendanceDashboardView.swift in Sources */,
 				C30000000000000000000007 /* WidgetSnapshotStore.swift in Sources */,
+				C30000000000000000000008 /* WatchConnectivityCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -23,6 +23,7 @@ struct WorkingHourApp: App {
                     DataManager.shared.modelContext = context
                     DataManager.shared.loadAll()
                     AttendanceStore.shared.configure(modelContext: context)
+                    WatchConnectivityCoordinator.shared.activate()
                     checkAndRestoreLiveActivity(context: context)
                     refreshClockInRemindersIfNeeded()
                     startGeofencingIfEnabled()
@@ -37,6 +38,7 @@ struct WorkingHourApp: App {
             if newPhase == .active {
                 let context = SharedModelContainer.shared.container.mainContext
                 AttendanceStore.shared.configure(modelContext: context)
+                WatchConnectivityCoordinator.shared.activate()
                 checkAndRestoreLiveActivity(context: context)
             }
         }

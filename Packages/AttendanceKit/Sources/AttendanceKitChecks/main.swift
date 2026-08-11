@@ -156,6 +156,10 @@ func checkWatchSync() async throws {
     await service.queueForFallback(command)
     let fallbackCommands = await queue.commands
     try expect(fallbackCommands == [command], "Fallback queue should store unreachable command")
+
+    let encoded = try WatchSyncCodec.encode(.command(command))
+    let decoded = try WatchSyncCodec.decode(encoded)
+    try expect(decoded == .command(command), "Watch messages should round-trip through the codec")
 }
 
 do {
