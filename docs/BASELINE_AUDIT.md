@@ -32,6 +32,7 @@ Branch at audit start: not a git repository. A baseline repository was initializ
 - `WorkingHour.xcodeproj/`: Xcode project with file-system synchronized groups.
 - `WorkingHour/`: iOS app source, localized strings, app icon, entitlements.
 - `WorkingHourMac/`: native macOS attendance app shell.
+- `WorkingHourMacWidget/`: macOS WidgetKit desktop widget extension.
 - `WorkingHourWatch/`: native compact watchOS attendance app shell.
 - `WorkingHourWatchWidget/`: watchOS WidgetKit complication extension.
 - `Shared/`: shared SwiftData models, managers, intents, logging, live activity/session structs.
@@ -47,6 +48,7 @@ Branch at audit start: not a git repository. A baseline repository was initializ
 - Native targets found in `project.pbxproj`:
   - `Working Hour`: iOS application, bundle id `com.tsubuzaki.WorkingHour`, iOS deployment target `18.0`.
   - `Working Hour Mac`: macOS application, bundle id `com.tsubuzaki.WorkingHour.mac`, macOS deployment target `14.0`.
+  - `Working Hour Mac Widget`: macOS WidgetKit extension, bundle id `com.tsubuzaki.WorkingHour.mac.widget`, macOS deployment target `14.0`.
   - `Working Hour Watch`: watchOS application, bundle id `com.tsubuzaki.WorkingHour.watchkitapp`, watchOS deployment target `10.0`.
   - `Working Hour Watch Widget`: watchOS WidgetKit extension, bundle id `com.tsubuzaki.WorkingHour.watchkitapp.widget`, watchOS deployment target `10.0`.
   - `Ushio`: Widget extension, bundle id `com.tsubuzaki.WorkingHour.Ushio`, iOS deployment target `26.0`.
@@ -118,4 +120,4 @@ After adding an App Group availability preflight on 2026-08-11, the same unsigne
 
 - Existing deployment targets are higher than the requested minimums; lowering requires Xcode verification.
 - Current App Group/iCloud identifiers use the upstream author namespace and must be replaced manually by the project owner.
-- Native macOS and watchOS app targets are implemented and runtime-verified. The Watch complication extension builds and embeds successfully; a macOS widget and signed cross-device sync remain future work.
+- Native macOS and watchOS app targets are implemented and runtime-verified. Their WidgetKit extensions build and embed successfully; signed cross-device sync remains future work.

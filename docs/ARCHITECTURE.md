@@ -14,7 +14,7 @@ flowchart TD
     C --> H[Mac App Group snapshot]
     D --> I[Watch snapshot]
     G --> J[iPhone Home/Lock Screen Widget]
-    H --> K[Future macOS Desktop Widget]
+    H --> K[macOS Desktop Widget]
     I --> L[Watch complication]
 ```
 
@@ -64,6 +64,8 @@ The old timesheet/project/break/geofencing code remains in the repository as leg
 
 The native `Working Hour Mac` target embeds `AttendanceDashboardView(displayStyle: .regular)` and uses the same `AttendanceStore`, `AttendanceStorageRecord`, snapshot store, model container, and `AttendanceKit` package as iOS. Its schema intentionally includes only the new attendance model, so legacy iOS timesheet, geofencing, and Live Activity models are not pulled into the Mac target.
 
+`Working Hour Mac Widget` is a WidgetKit extension embedded in the Mac app. It shares the existing timeline provider and snapshot-only small/medium widget views, so no attendance formulas or live SwiftData/CloudKit queries are duplicated in the extension.
+
 ## Widget Snapshot
 
 The app writes `AttendanceWidgetSnapshot` JSON into the App Group container. The widget reads this snapshot and uses `WidgetTimelineLogic` for meaningful refresh dates. It does not query CloudKit or SwiftData live during timeline generation.
@@ -76,4 +78,4 @@ The native `Working Hour Watch` target is a modern SwiftUI watchOS application a
 
 ## Remaining Target Work
 
-The native macOS and watchOS app targets now build and run. The Watch complication extension builds and is embedded, but adding it to a watch face remains a manual UI check. Mac App Group/CloudKit signing, Watch App Group/CloudKit signing, WatchConnectivity integration, and a macOS widget remain pending.
+The native macOS and watchOS app targets now build and run. Their WidgetKit extensions build and are embedded, but adding them to the desktop/watch face remains a manual UI check. Mac/Watch App Group and CloudKit signing plus WatchConnectivity integration remain pending.

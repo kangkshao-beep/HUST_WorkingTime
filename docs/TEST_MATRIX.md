@@ -15,7 +15,7 @@
 | 11. Watch offline -> later sync | Watch offline | Clock in on watch | Local-first update, queued sync | Native Watch app builds, installs, launches, and uses local SwiftData fallback; sync protocol XCTest passes, but WatchConnectivity transport is not wired | Pass app run; pending sync |
 | 12. Mac receives CloudKit update | Mac signed in | Sync iPhone record | Mac app shows same record | Native Mac app builds and runs with local fallback; signed CloudKit sync not run | Pending sync |
 | 13. iPhone widget before/after punch | Widget added | Clock in | Snapshot updates widget state | Timeline XCTest passed; widget extension builds for iOS simulator and generic iOS device | Pending widget UI |
-| 14. Mac desktop widget | Mac target configured | Add widget | Shows same rules from local snapshot | Shared snapshot/timeline rules exist; native macOS widget target not created | Pending |
+| 14. Mac desktop widget | Mac target configured | Add widget | Shows same rules from local snapshot | Native Mac WidgetKit extension builds, embeds in the host app, and exposes small/medium families; desktop placement not manually exercised | Partial pass |
 | 15. Watch complication | Watch target configured | Add complication | Shows active countdown/status | Watch WidgetKit extension builds for simulator/device architectures, embeds in the Watch app, and exposes three accessory families; watch-face placement not manually exercised | Partial pass |
 
 ## Verification Commands
@@ -39,3 +39,5 @@
 | `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Watch" -configuration Debug -sdk watchsimulator -destination "generic/platform=watchOS Simulator" ... build` | Pass | Watch app and embedded WidgetKit complication compile for the simulator. |
 | `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Watch" -configuration Debug -sdk watchos -destination "generic/platform=watchOS" ... build` | Pass | Watch app and complication compile for generic device architectures. |
 | `xcrun simctl launch 1E19D673-DB89-4DEE-9894-9B86D4AA7C67 com.tsubuzaki.WorkingHour.watchkitapp` | Pass | Complete Watch bundle retained pid 88322 across a second launch query; screenshot verified the compact layout. |
+| `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Mac" -configuration Debug -destination "platform=macOS" ... build` | Pass | Mac host and embedded desktop WidgetKit extension compile successfully. |
+| `pgrep -fl "Working Hour Mac"` | Pass | Complete Mac bundle remained active as pid 6918 after ad-hoc signing and relaunch. |

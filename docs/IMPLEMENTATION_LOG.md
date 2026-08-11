@@ -423,3 +423,45 @@ Result:
 Known issue:
 - Signed Watch App Group/CloudKit capabilities and WatchConnectivity transport remain pending.
 - The extension bundle and WidgetKit extension point are validated, but adding the complication to a watch face still requires manual UI verification.
+
+
+## 2026-08-11 - Native macOS Desktop Widget
+
+Modified files:
+- `WorkingHourMacWidget/Info.plist`
+- `WorkingHourMacWidget/WorkingHourMacWidget.swift`
+- `WorkingHour.xcodeproj/project.pbxproj`
+- `WorkingHour.xcodeproj/xcshareddata/xcschemes/Working Hour Mac Widget.xcscheme`
+- `docs/ARCHITECTURE.md`
+- `docs/BASELINE_AUDIT.md`
+- `docs/IMPLEMENTATION_LOG.md`
+- `docs/MANUAL_SETUP.md`
+- `docs/TEST_MATRIX.md`
+
+Changes:
+- Added the `Working Hour Mac Widget` extension and shared scheme.
+- Embedded the extension in the native Mac host application.
+- Reused the existing snapshot provider, small/medium views, `WidgetSnapshotStore`, and `AttendanceKit` timeline logic.
+- Kept App Group and CloudKit capability flags disabled for unsigned smoke builds.
+
+Validation commands:
+- `xcodebuild -list -project WorkingHour.xcodeproj`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Mac" -configuration Debug -destination "platform=macOS" -derivedDataPath /private/tmp/WorkingHourMacWithWidgetDerivedData CODE_SIGNING_ALLOWED=NO build`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourMacWidgetIOSRegression CODE_SIGNING_ALLOWED=NO build`
+- `xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Watch" -configuration Debug -sdk watchsimulator -destination "generic/platform=watchOS Simulator" -derivedDataPath /private/tmp/WorkingHourMacWidgetWatchRegression CODE_SIGNING_ALLOWED=NO build`
+- `swift test --package-path Packages/AttendanceKit --scratch-path /private/tmp/attendancekit-mac-widget-test`
+- `plutil -p "/private/tmp/WorkingHourMacWithWidgetDerivedData/Build/Products/Debug/Working Hour Mac.app/Contents/PlugIns/Working Hour Mac Widget.appex/Contents/Info.plist"`
+- `open "/private/tmp/WorkingHourMacWithWidgetDerivedData/Build/Products/Debug/Working Hour Mac.app"`
+- `pgrep -fl "Working Hour Mac"`
+
+Result:
+- Passed. Xcode lists the Mac Widget target and shared scheme.
+- Passed. The host app and embedded WidgetKit extension compile together.
+- Passed. The embedded extension has the expected bundle identifier and `com.apple.widgetkit-extension` point.
+- Passed. The complete Mac host remained active as pid 6918 after ad-hoc signing and relaunch.
+- Passed. iOS app/widget and Watch app/complication regression builds succeed.
+- Passed. `AttendanceKitTests` executed 30 XCTest cases with 0 failures.
+
+Known issue:
+- The temporary development bundle did not appear in `pluginkit` queries; final desktop placement remains a signed Widget Gallery UI check.
+- Signed Mac App Group/CloudKit capabilities are still required for host-to-widget snapshot sharing.

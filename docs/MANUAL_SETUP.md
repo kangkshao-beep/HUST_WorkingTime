@@ -30,6 +30,7 @@ xcrun simctl list runtimes
 xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedData CODE_SIGNING_ALLOWED=NO build
 xcodebuild -project WorkingHour.xcodeproj -scheme "Ushio" -configuration Debug -sdk iphonesimulator -destination "generic/platform=iOS Simulator" -derivedDataPath /private/tmp/WorkingHourDerivedDataUshio CODE_SIGNING_ALLOWED=NO build
 xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour" -configuration Debug -sdk iphoneos -destination "generic/platform=iOS" -derivedDataPath /private/tmp/WorkingHourDerivedDataDevice CODE_SIGNING_ALLOWED=NO build
+xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Mac" -configuration Debug -destination "platform=macOS" -derivedDataPath /private/tmp/WorkingHourMacDerivedData CODE_SIGNING_ALLOWED=NO build
 xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Watch" -configuration Debug -sdk watchsimulator -destination "generic/platform=watchOS Simulator" -derivedDataPath /private/tmp/WorkingHourWatchDerivedData CODE_SIGNING_ALLOWED=NO build
 xcodebuild -project WorkingHour.xcodeproj -scheme "Working Hour Watch" -configuration Debug -sdk watchos -destination "generic/platform=watchOS" -derivedDataPath /private/tmp/WorkingHourWatchDeviceDerivedData CODE_SIGNING_ALLOWED=NO build
 ```
@@ -82,11 +83,22 @@ To enable durable cross-device sync, add the owner-controlled App Group and iClo
 - `INFOPLIST_KEY_AttendanceAppGroupEnabled`
 - `INFOPLIST_KEY_AttendanceCloudKitEnabled`
 
-The native macOS app and future desktop widget should use:
+The native macOS app and desktop widget use:
 - Same CloudKit container for durable sync.
 - Mac-local App Group for app-to-widget snapshots.
 - `Shared/Attendance/AttendanceDashboardView(displayStyle: .regular)` as the app root content.
 - `Shared/Attendance/AttendanceStore` for persistence and snapshot writes.
+
+## macOS Widget Target
+
+Target: `Working Hour Mac Widget`
+
+Current status:
+- Builds and embeds in `Working Hour Mac` for macOS 14.0 or newer.
+- Supports system small and system medium desktop widgets.
+- Reads `AttendanceWidgetSnapshot` and never queries SwiftData or CloudKit during timeline generation.
+
+To share live snapshots, add the same Mac-local App Group capability used by the host app, then set `AttendanceAppGroupEnabled` to `true` in `WorkingHourMacWidget/Info.plist`. Desktop placement and rendering remain a manual Widget Gallery check.
 
 ## watchOS App and Widget Targets
 
@@ -110,5 +122,6 @@ Simulator can validate:
 Device is required for final validation of:
 - Real iCloud/CloudKit sync.
 - Final complication placement and rendering on a physical Apple Watch.
+- Final macOS desktop Widget Gallery placement and rendering.
 - WatchConnectivity behavior.
 - Notification permission and delivery behavior.
