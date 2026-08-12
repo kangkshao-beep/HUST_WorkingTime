@@ -417,8 +417,9 @@ private struct LyricShareRow: View {
                         }
 
                         Text(verbatim: "「\(share.excerpt.line)」")
-                            .font(.body.weight(.medium))
+                            .font(.system(size: 26, weight: .semibold))
                             .foregroundStyle(AttendanceTheme.ink)
+                            .lineSpacing(3)
                             .fixedSize(horizontal: false, vertical: true)
 
                         Text(verbatim: "《\(share.excerpt.songTitle)》 · \(share.excerpt.artist)")
