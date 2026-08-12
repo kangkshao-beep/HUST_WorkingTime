@@ -566,3 +566,11 @@ Result:
 Known issue:
 - The system share controls compile and render, but the simulator share-sheet interaction was not exercised automatically.
 - Search links use the native Apple Music URL scheme and Hong Kong storefront; opening a specific catalog track directly will require stable Apple Music catalog IDs.
+
+
+## 2026-08-12 - Unsigned Mac Preview Startup Fix
+
+Changes:
+- Aligned widget snapshot reads and writes with the `AttendanceAppGroupEnabled` capability flag.
+- Prevented unsigned Mac preview builds from blocking first-window rendering while attempting to write an unavailable App Group snapshot.
+- Kept snapshot sharing enabled for targets that explicitly opt into the signed App Group capability.

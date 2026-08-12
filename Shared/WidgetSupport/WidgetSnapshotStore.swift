@@ -5,14 +5,20 @@ enum WidgetSnapshotStore {
     static let appGroupIdentifier = "group.com.tsubuzaki.WorkingHour"
     static let snapshotFilename = "attendance-widget-snapshot.json"
 
+    private static var isAppGroupEnabled: Bool {
+        Bundle.main.object(forInfoDictionaryKey: "AttendanceAppGroupEnabled") as? Bool == true
+    }
+
     static func write(_ snapshot: AttendanceWidgetSnapshot) throws {
+        guard isAppGroupEnabled else { return }
         let url = try snapshotURL(createDirectory: true)
         let data = try JSONEncoder.attendanceSnapshotEncoder.encode(snapshot)
         try data.write(to: url, options: [.atomic])
     }
 
     static func read() -> AttendanceWidgetSnapshot? {
-        guard let url = try? snapshotURL(createDirectory: false),
+        guard isAppGroupEnabled,
+              let url = try? snapshotURL(createDirectory: false),
               let data = try? Data(contentsOf: url) else {
             return nil
         }
