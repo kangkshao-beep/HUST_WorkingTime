@@ -322,6 +322,9 @@ private struct MacTimeMetric: View {
 }
 
 private struct MacCantoneseLyricShareSection: View {
+    @State private var clockInVariation = 0
+    @State private var clockOutVariation = 0
+
     let record: AttendanceRecord
 
     private var provider: CantoneseLyricShareProvider {
@@ -334,15 +337,25 @@ private struct MacCantoneseLyricShareSection: View {
                 .font(.headline)
 
             MacLyricShareRow(
-                share: provider.share(for: record.clockInAt, moment: .clockIn),
-                color: .accentColor
+                share: provider.share(
+                    for: record.clockInAt,
+                    moment: .clockIn,
+                    variation: clockInVariation
+                ),
+                color: .accentColor,
+                onShuffle: { clockInVariation += 1 }
             )
 
             if let clockOutAt = record.actualClockOutAt {
                 Divider()
                 MacLyricShareRow(
-                    share: provider.share(for: clockOutAt, moment: .clockOut),
-                    color: .green
+                    share: provider.share(
+                        for: clockOutAt,
+                        moment: .clockOut,
+                        variation: clockOutVariation
+                    ),
+                    color: .green,
+                    onShuffle: { clockOutVariation += 1 }
                 )
             }
         }
@@ -355,44 +368,64 @@ private struct MacLyricShareRow: View {
 
     let share: CantoneseLyricShare
     let color: Color
+    let onShuffle: () -> Void
 
     var body: some View {
-        HStack(alignment: .top, spacing: 11) {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 10) {
+                Image(systemName: share.moment == .clockIn ? "sunrise.fill" : "sunset.fill")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .frame(width: 34, height: 34)
+                    .background(color)
+                    .clipShape(.rect(cornerRadius: 8))
+
+                Text(verbatim: share.momentLabel)
+                    .font(.headline.weight(.semibold))
+
+                Text(verbatim: share.occasion.label)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+
+                Spacer()
+
+                if canShuffle {
+                    Button(action: onShuffle) {
+                        Image(systemName: "shuffle")
+                            .frame(width: 24, height: 24)
+                    }
+                    .buttonStyle(.borderless)
+                    .help(macLocalized("换一首粤语歌"))
+                    .accessibilityLabel(macLocalized("换一首粤语歌"))
+                }
+
+                ShareLink(item: share.shareText, subject: Text(verbatim: share.shareTitle)) {
+                    Image(systemName: "square.and.arrow.up")
+                        .frame(width: 24, height: 24)
+                }
+                .buttonStyle(.borderless)
+                .help(macLocalized("分享"))
+                .accessibilityLabel(macLocalized("分享"))
+            }
+
             Button {
                 openInAppleMusic()
             } label: {
-                HStack(alignment: .top, spacing: 11) {
-                    ZStack(alignment: .bottomTrailing) {
-                        Image(systemName: share.moment == .clockIn ? "sunrise.fill" : "sunset.fill")
-                            .foregroundStyle(color)
-                            .frame(width: 24, height: 24)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(verbatim: "「\(share.excerpt.line)」")
+                        .font(.system(size: 42, weight: .semibold))
+                        .lineSpacing(6)
+                        .fixedSize(horizontal: false, vertical: true)
 
+                    HStack(spacing: 6) {
                         Image(systemName: "play.circle.fill")
-                            .font(.system(size: 10, weight: .semibold))
                             .foregroundStyle(color)
-                            .background(Circle().fill(.white))
-                            .offset(x: 3, y: 2)
-                    }
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack(spacing: 7) {
-                            Text(verbatim: share.momentLabel)
-                                .font(.callout.weight(.semibold))
-                            Text(verbatim: share.occasion.label)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-
-                        Text(verbatim: "「\(share.excerpt.line)」")
-                            .font(.body)
-                            .fixedSize(horizontal: false, vertical: true)
-
                         Text(verbatim: "《\(share.excerpt.songTitle)》 · \(share.excerpt.artist)")
-                            .font(.caption)
+                            .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
@@ -400,15 +433,14 @@ private struct MacLyricShareRow: View {
             .disabled(share.excerpt.appleMusicSearchURL == nil)
             .help(macLocalized("在 Apple Music 中播放"))
             .accessibilityLabel(macLocalized("在 Apple Music 中播放"))
-
-            ShareLink(item: share.shareText, subject: Text(verbatim: share.shareTitle)) {
-                Image(systemName: "square.and.arrow.up")
-                    .frame(width: 24, height: 24)
-            }
-            .buttonStyle(.borderless)
-            .help(macLocalized("分享"))
-            .accessibilityLabel(macLocalized("分享"))
         }
+    }
+
+    private var canShuffle: Bool {
+        if case .solarTerm = share.occasion {
+            return true
+        }
+        return false
     }
 
     private func openInAppleMusic() {

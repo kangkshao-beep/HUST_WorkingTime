@@ -143,25 +143,33 @@ public struct CantoneseLyricShareProvider: Sendable {
         self.chineseCalendar = chineseCalendar
     }
 
-    public func share(for date: Date, moment: AttendanceShareMoment) -> CantoneseLyricShare {
+    public func share(
+        for date: Date,
+        moment: AttendanceShareMoment,
+        variation: Int = 0
+    ) -> CantoneseLyricShare {
         let period = timePeriod(for: date)
         let occasion: CantoneseLyricOccasion
-        let pair: LyricPair
+        let excerpt: CantoneseLyricExcerpt
 
         if let festival = traditionalFestival(on: date) {
             occasion = .traditionalFestival(festival)
-            pair = Self.festivalLyrics[festival] ?? Self.defaultLyrics
+            let pair = Self.festivalLyrics[festival] ?? Self.defaultLyrics
+            excerpt = moment == .clockIn ? pair.clockIn : pair.clockOut
         } else {
             let term = solarTerm(containing: date)
             occasion = .solarTerm(term)
-            pair = Self.solarTermLyrics[term] ?? Self.defaultLyrics
+            let candidates = Self.rotatingLyrics(for: term, moment: moment)
+            let dayIndex = gregorianCalendar.ordinality(of: .day, in: .era, for: date) ?? 0
+            let index = (dayIndex + max(variation, 0)) % candidates.count
+            excerpt = candidates[index]
         }
 
         return CantoneseLyricShare(
             moment: moment,
             timePeriod: period,
             occasion: occasion,
-            excerpt: moment == .clockIn ? pair.clockIn : pair.clockOut,
+            excerpt: excerpt,
             timestampLabel: timestampLabel(for: date)
         )
     }
@@ -457,4 +465,58 @@ private extension CantoneseLyricShareProvider {
         .majorSnow: .init(clockIn: gloriousYears, clockOut: moon),
         .winterSolstice: .init(clockIn: redSun, clockOut: wanderersHeart)
     ]
+
+    static func rotatingLyrics(
+        for term: SolarTerm,
+        moment: AttendanceShareMoment
+    ) -> [CantoneseLyricExcerpt] {
+        let contextualPair = solarTermLyrics[term] ?? defaultLyrics
+        let seasonalPool: [CantoneseLyricExcerpt]
+
+        switch (season(for: term), moment) {
+        case (.spring, .clockIn):
+            seasonalPool = [brave, redSun, trueMan, freedom, pride, spring, rain]
+        case (.spring, .clockOut):
+            seasonalPool = [spring, rain, yearsAsSong, joyStreet, remoteHer, resonance, thousandSongs]
+        case (.summer, .clockIn):
+            seasonalPool = [redSun, freedom, trueMan, pride, workingClass, brave, summerRomance]
+        case (.summer, .clockOut):
+            seasonalPool = [summer, summerRomance, sunset, grapes, remoteHer, yearsAsSong, joyStreet]
+        case (.autumn, .clockIn):
+            seasonalPool = [brave, gloriousYears, trueMan, pride, redSun, freedom, workingClass]
+        case (.autumn, .clockOut):
+            seasonalPool = [autumn, grapes, remoteHer, resonance, thousandSongs, yearsAsSong, sunset]
+        case (.winter, .clockIn):
+            seasonalPool = [redSun, gloriousYears, brave, trueMan, freedom, pride, workingClass]
+        case (.winter, .clockOut):
+            seasonalPool = [winter, snow, moon, wanderersHeart, resonance, thousandSongs, fuji]
+        }
+
+        let contextual = moment == .clockIn ? contextualPair.clockIn : contextualPair.clockOut
+        return [contextual] + seasonalPool.filter { $0 != contextual }
+    }
+
+    static func season(for term: SolarTerm) -> LyricSeason {
+        switch term {
+        case .startOfSpring, .rainWater, .awakeningOfInsects,
+             .springEquinox, .clearAndBright, .grainRain:
+            return .spring
+        case .startOfSummer, .grainFull, .grainInEar,
+             .summerSolstice, .minorHeat, .majorHeat:
+            return .summer
+        case .startOfAutumn, .limitOfHeat, .whiteDew,
+             .autumnEquinox, .coldDew, .frostDescent:
+            return .autumn
+        case .startOfWinter, .minorSnow, .majorSnow,
+             .winterSolstice, .minorCold, .majorCold:
+            return .winter
+        }
+    }
+
+    enum LyricSeason {
+        case spring
+        case summer
+        case autumn
+        case winter
+    }
 }

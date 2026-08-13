@@ -43,7 +43,34 @@ final class CantoneseLyricShareProviderTests: XCTestCase {
         XCTAssertEqual(clockIn.momentLabel, "朝早返工")
         XCTAssertEqual(clockOut.momentLabel, "傍晚收工")
         XCTAssertNotEqual(clockIn.excerpt, clockOut.excerpt)
-        XCTAssertTrue(clockOut.shareText.contains("《春夏秋冬》 · 張國榮"))
+        XCTAssertTrue(clockOut.shareText.contains(clockOut.excerpt.songTitle))
+    }
+
+    func testSolarTermLyricsRotateByDayAndManualVariation() {
+        let provider = CantoneseLyricShareProvider(timeZone: hongKongTimeZone)
+        let firstDay = date(2026, 8, 11, 8, 30)
+        let nextDay = date(2026, 8, 12, 8, 30)
+
+        let first = provider.share(for: firstDay, moment: .clockIn)
+        let repeated = provider.share(for: firstDay, moment: .clockIn)
+        let next = provider.share(for: nextDay, moment: .clockIn)
+        let shuffled = provider.share(for: firstDay, moment: .clockIn, variation: 1)
+
+        XCTAssertEqual(first, repeated)
+        XCTAssertNotEqual(first.excerpt, next.excerpt)
+        XCTAssertNotEqual(first.excerpt, shuffled.excerpt)
+        XCTAssertEqual(first.occasion, shuffled.occasion)
+    }
+
+    func testFestivalLyricsRemainFixedAndTakePriority() {
+        let provider = CantoneseLyricShareProvider(timeZone: hongKongTimeZone)
+        let lunarNewYear = date(2026, 2, 17, 8, 30)
+
+        let first = provider.share(for: lunarNewYear, moment: .clockIn)
+        let shuffled = provider.share(for: lunarNewYear, moment: .clockIn, variation: 4)
+
+        XCTAssertEqual(first.excerpt, shuffled.excerpt)
+        XCTAssertEqual(first.occasion, .traditionalFestival(.lunarNewYear))
     }
 
     func testCommercialExcerptsStayShort() {
