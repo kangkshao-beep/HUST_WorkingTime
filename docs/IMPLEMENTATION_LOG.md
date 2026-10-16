@@ -574,3 +574,22 @@ Changes:
 - Aligned widget snapshot reads and writes with the `AttendanceAppGroupEnabled` capability flag.
 - Prevented unsigned Mac preview builds from blocking first-window rendering while attempting to write an unavailable App Group snapshot.
 - Kept snapshot sharing enabled for targets that explicitly opt into the signed App Group capability.
+
+## 2026-10-16 - V0.2 Mac In-App Language Selection
+
+Changes:
+- Added an observable Mac-only language preference with system, Simplified Chinese, Hong Kong Traditional Chinese, and English options.
+- Added a visible toolbar language menu and native Settings window (`Command-comma`). Selection updates the interface immediately and persists in the app's existing preferences domain.
+- Routed dynamically constructed Mac interface text through explicit localization bundles and applied the selected locale to date/time formatting.
+- Added explicit `zh-Hans` and `en` app resources and new language-control translations in `zh-HK`.
+- Kept the bundle identifier, attendance data models, calendar calculations, and storage paths unchanged.
+- Updated Mac app/widget Debug and Release versions to 0.2 (build 2), and added Chinese release notes in `CHANGELOG.md`.
+
+Validation:
+- Universal macOS Release build (`arm64` and `x86_64`) passed.
+- AttendanceKit: 40 XCTest cases passed, 0 failures.
+- `WorkingHourMacChecks/LanguageSettingsChecks.swift`: 48 checks passed against the built app resources, covering live observation invalidation, all three translations, formatted counts, saved preference reload, system-language matching, and invalid preference recovery.
+- An isolated sandboxed preview with its own bundle identifier verified Simplified/Hong Kong/English UI switching, translated dates and toolbar actions, Settings via Command-comma, preference persistence after quitting, and preservation of a test clock-in record. Switching on the history page kept the current page and record intact. English main-window and Settings layouts were visually checked.
+- Project plist, all three Mac localization tables, and Git whitespace checks passed.
+
+The V0.2 release continues to use ad-hoc signing and local storage; Developer ID notarization, CloudKit synchronization, and signed App Group widget sharing are not enabled.

@@ -2,10 +2,6 @@ import AttendanceKit
 import SwiftData
 import SwiftUI
 
-private func macLocalized(_ key: String) -> String {
-    NSLocalizedString(key, comment: "")
-}
-
 struct MacAttendanceDashboardView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var store = AttendanceStore.shared
@@ -17,12 +13,12 @@ struct MacAttendanceDashboardView: View {
     var body: some View {
         NavigationSplitView {
             List(selection: $selection) {
-                Section("工作台") {
+                Section(macLocalized("工作台")) {
                     MacSidebarItem(title: macLocalized("今天"), systemImage: "clock", value: .today)
                     MacSidebarItem(title: macLocalized("本月"), systemImage: "calendar", value: .month)
                 }
 
-                Section("数据") {
+                Section(macLocalized("数据")) {
                     MacSidebarItem(title: macLocalized("打卡记录"), systemImage: "list.bullet.rectangle", value: .history)
                 }
             }
@@ -40,16 +36,26 @@ struct MacAttendanceDashboardView: View {
             }
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
+                    Menu {
+                        MacLanguagePicker()
+                            .pickerStyle(.inline)
+                    } label: {
+                        Label(macLocalized("语言"), systemImage: "globe")
+                            .labelStyle(.titleAndIcon)
+                    }
+                    .help(macLocalized("切换界面语言"))
+                    .accessibilityIdentifier("interfaceLanguageMenu")
+
                     if let storageWarning {
                         Button {
                             showsStorageWarning.toggle()
                         } label: {
                             Image(systemName: "externaldrive.badge.exclamationmark")
                         }
-                        .help("存储状态")
+                        .help(macLocalized("存储状态"))
                         .popover(isPresented: $showsStorageWarning, arrowEdge: .bottom) {
                             VStack(alignment: .leading, spacing: 8) {
-                                Label("当前使用本机存储", systemImage: "externaldrive")
+                                Label(macLocalized("当前使用本机存储"), systemImage: "externaldrive")
                                     .font(.headline)
                                 Text(storageWarning)
                                     .font(.callout)
@@ -67,7 +73,7 @@ struct MacAttendanceDashboardView: View {
                     } label: {
                         Image(systemName: "arrow.clockwise")
                     }
-                    .help("刷新")
+                    .help(macLocalized("刷新"))
                 }
             }
         }
@@ -86,7 +92,7 @@ private enum MacAttendanceSection: String, CaseIterable, Hashable {
     case month
     case history
 
-    var title: String {
+    @MainActor var title: String {
         switch self {
         case .today: macLocalized("今天")
         case .month: macLocalized("本月")
@@ -199,7 +205,7 @@ private struct MacTodayFocus: View {
                     Button {
                         store.clockOut(record: record)
                     } label: {
-                        Label("结束今天工作", systemImage: "stop.fill")
+                        Label(macLocalized("结束今天工作"), systemImage: "stop.fill")
                     }
                     .buttonStyle(.bordered)
                     .controlSize(.large)
@@ -217,7 +223,7 @@ private struct MacTodayFocus: View {
                         Button {
                             store.clockInNow()
                         } label: {
-                            Label("现在打卡", systemImage: "play.fill")
+                            Label(macLocalized("现在打卡"), systemImage: "play.fill")
                         }
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
@@ -474,7 +480,7 @@ private struct MacMonthView: View {
                     Text("\(progress.validAttendanceDays)")
                         .font(.system(size: 52, weight: .semibold, design: .rounded))
                         .monospacedDigit()
-                    Text("/ \(progress.requiredDays) 天")
+                    Text(macLocalized("/ %lld 天", progress.requiredDays))
                         .font(.title2)
                         .foregroundStyle(.secondary)
                 }
@@ -496,7 +502,7 @@ private struct MacMonthView: View {
                 .clipShape(.rect(cornerRadius: 6))
 
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("最近打卡")
+                    Text(macLocalized("最近打卡"))
                         .font(.headline)
                     MacRecordList(records: Array(store.records.prefix(6)), store: store)
                 }
@@ -515,7 +521,7 @@ private struct MacMonthSummary: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack {
-                Text("本月")
+                Text(macLocalized("本月"))
                     .font(.headline)
                 Spacer()
                 Text(progress.passed ? macLocalized("已达标") : macLocalized("进行中"))
@@ -527,7 +533,7 @@ private struct MacMonthSummary: View {
                 Text("\(progress.validAttendanceDays)")
                     .font(.system(size: 36, weight: .semibold, design: .rounded))
                     .monospacedDigit()
-                Text("/ \(progress.requiredDays) 天")
+                Text(macLocalized("/ %lld 天", progress.requiredDays))
                     .foregroundStyle(.secondary)
             }
 
@@ -536,18 +542,18 @@ private struct MacMonthSummary: View {
 
             Grid(alignment: .leading, horizontalSpacing: 18, verticalSpacing: 10) {
                 GridRow {
-                    Text("还需打卡")
-                    Text("\(progress.remainingNeeded) 天")
+                    Text(macLocalized("还需打卡"))
+                    Text(macLocalized("%lld 天", progress.remainingNeeded))
                         .foregroundStyle(.primary)
                 }
                 GridRow {
-                    Text("本月工作日")
-                    Text("\(progress.totalWorkdays) 天")
+                    Text(macLocalized("本月工作日"))
+                    Text(macLocalized("%lld 天", progress.totalWorkdays))
                         .foregroundStyle(.primary)
                 }
                 GridRow {
-                    Text("已缺勤")
-                    Text("\(progress.missedPastWorkdays) 天")
+                    Text(macLocalized("已缺勤"))
+                    Text(macLocalized("%lld 天", progress.missedPastWorkdays))
                         .foregroundStyle(.primary)
                 }
             }
@@ -582,14 +588,16 @@ private struct MacHistoryView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 MacPageHeader(
-                    eyebrow: String(localized: "共 \(store.records.count) 条记录"),
+                    eyebrow: store.records.count == 1
+                        ? macLocalized("共 1 条记录")
+                        : macLocalized("共 %lld 条记录", store.records.count),
                     title: macLocalized("打卡记录"),
-                    statusText: macLocalized("自动同步"),
+                    statusText: macLocalized("本机存储"),
                     statusColor: .secondary
                 )
 
                 if store.records.isEmpty {
-                    ContentUnavailableView("暂无记录", systemImage: "calendar.badge.clock")
+                    ContentUnavailableView(macLocalized("暂无记录"), systemImage: "calendar.badge.clock")
                         .frame(maxWidth: .infinity, minHeight: 340)
                 } else {
                     MacRecordList(records: store.records, store: store)
@@ -626,14 +634,14 @@ private struct MacRecordList: View {
                     }
                     .frame(width: 130, alignment: .leading)
 
-                    Text(record.clockInAt.formatted(date: .omitted, time: .shortened))
+                    Text(record.clockInAt.formatted(.dateTime.hour().minute().locale(locale)))
                         .monospacedDigit()
 
                     Image(systemName: "arrow.right")
                         .font(.caption)
                         .foregroundStyle(.tertiary)
 
-                    Text((record.actualClockOutAt ?? record.targetEndAt).formatted(date: .omitted, time: .shortened))
+                    Text((record.actualClockOutAt ?? record.targetEndAt).formatted(.dateTime.hour().minute().locale(locale)))
                         .monospacedDigit()
 
                     Spacer()
@@ -647,7 +655,7 @@ private struct MacRecordList: View {
                 }
                 .padding(.vertical, 12)
                 .contextMenu {
-                    Button("删除记录", role: .destructive) {
+                    Button(macLocalized("删除记录"), role: .destructive) {
                         store.delete(record: record)
                     }
                 }
